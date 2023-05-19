@@ -5,7 +5,7 @@
 ### 主流框架 & 特性
 
 - Spring Boot 2.7.x（贼新）
-- Spring WebFlux(非阻塞式HTTP请求框架)
+- Spring WebFlux(非阻塞式HTTP请求框架, 与druid不兼容)
 - MyBatis + MyBatis Plus 数据访问（开启分页）
 - Spring Boot 调试工具和项目处理器
 - Spring AOP 切面编程
@@ -16,7 +16,6 @@
 
 - MySQL 数据库
 - Redis 内存数据库
-- Elasticsearch 搜索引擎
 - 腾讯云 COS 对象存储
 
 ### 工具类
@@ -87,38 +86,6 @@ spring:
     store-type: redis
 ```
 
-### Elasticsearch 搜索引擎
-
-1）修改 `application.yml` 的 Elasticsearch 配置为你自己的：
-
-```yml
-spring:
-  elasticsearch:
-    uris: http://localhost:9200
-    username: root
-    password: 123456
-```
-
-2）复制 `sql/post_es_mapping.json` 文件中的内容，通过调用 Elasticsearch 的接口或者 Kibana Dev Tools 来创建索引（相当于数据库建表）
-
-```
-PUT post_v1
-{
- 参数见 sql/post_es_mapping.json 文件
-}
-```
-
-这步不会操作的话需要补充下 Elasticsearch 的知识，或者自行百度一下~
-
-3）开启同步任务，将数据库的帖子同步到 Elasticsearch
-
-找到 job 目录下的 `FullSyncPostToEs` 和 `IncSyncPostToEs` 文件，取消掉 `@Component` 注解的注释，再次执行程序即可触发同步：
-
-```java
-// todo 取消注释开启任务
-//@Component
-```
-
 ### 问题
 
 #### mapstruct复制对象为null
@@ -126,3 +93,9 @@ PUT post_v1
 - 原因：因为lombok的依赖在mapstruct依赖后才引入
 
 - 解决：在mapstruct依赖之前引入lombok依赖就好了
+
+### 项目启动报错：druid相关的错误
+
+- 原因：druid与WebFlux冲突
+
+- 解决：移除druid依赖
