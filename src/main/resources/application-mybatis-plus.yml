@@ -4,7 +4,8 @@ mybatis-plus:
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   configuration:
-    map-underscore-to-camel-case: false
+    # 开启驼峰命名
+    map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
