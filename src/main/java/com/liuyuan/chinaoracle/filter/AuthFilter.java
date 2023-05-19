@@ -3,6 +3,7 @@ package com.liuyuan.chinaoracle.filter;
 import com.liuyuan.chinaoracle.annotation.AuthCheck;
 import com.liuyuan.chinaoracle.common.response.ErrorCode;
 import com.liuyuan.chinaoracle.exception.BusinessException;
+import com.liuyuan.chinaoracle.model.entity.User;
 import com.liuyuan.chinaoracle.model.enums.UserRoleEnum;
 import com.liuyuan.chinaoracle.service.UserService;
 import org.apache.commons.lang3.ObjectUtils;
@@ -32,36 +33,47 @@ public class AuthFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        //    // 当前登录用户拥有的权限的枚举对象
-        UserRoleEnum loginUserRoleEnum = UserRoleEnum.getEnumByRole(userService.getLoginUser(exchange).getUserRole());
 
-        // 用户权限不存在 或 用户被封号，直接拒绝
-        if (ObjectUtils.isEmpty(loginUserRoleEnum) || UserRoleEnum.BAN.equals(loginUserRoleEnum)) {
+        // 当前登录用户
+        User loginUser = userService.getLoginUser(exchange);
+
+        // 用户被封号，直接拒绝
+        if (userService.isProhibitLogin(loginUser)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
 
-        // 校验请求是否有级别足够的权限
+        // 校验当前登录用户是否有足够的权限
         return handlerMapping.getHandler(exchange).switchIfEmpty(chain.filter(exchange))
             .flatMap(handler -> {
                 if (handler instanceof HandlerMethod) {
-                    HandlerMethod methodHandle = (HandlerMethod) handler;
-                    AuthCheck auth = methodHandle.getMethodAnnotation(AuthCheck.class);
-                    // 必需权限不为空
-                    if (ObjectUtils.isNotEmpty(auth)) {
-                        // 目标权限的枚举对象
-                        UserRoleEnum mustRoleEnum = UserRoleEnum.getEnumByRole(auth.mustRole());
-                        // 目标权限存在时
-                        if (ObjectUtils.isNotEmpty(mustRoleEnum)) {
-                            // 如果 userRole的优先级低于mustRole的 则抛出异常
-                            if (!UserRoleEnum.isPriority(loginUserRoleEnum, mustRoleEnum)) {
-                                return Mono.error(new BusinessException(ErrorCode.NO_AUTH_ERROR));
-                            }
-                        }
+                    HandlerMethod handlerMethod = (HandlerMethod) handler;
+
+                    // 获取方法的注解
+                    AuthCheck auth = handlerMethod.getMethodAnnotation(AuthCheck.class);
+
+                    // 必需权限为空时，无需校验用户权限，直接放行
+                    if (ObjectUtils.isEmpty(auth)) {
+                        return chain.filter(exchange);
                     }
+
+                    UserRoleEnum mustRoleEnum = UserRoleEnum.getEnumByRole(auth.mustRole());
+
+                    // 必需权限非真实存在，可能是controller接口中@AuthCheck的mustRole赋值错误
+                    if (ObjectUtils.isEmpty(mustRoleEnum)) {
+                        return Mono.error(new BusinessException(ErrorCode.SYSTEM_ERROR, "必需权限不存在,严查开发人员"));
+                    }
+
+                    // 比较用户权限的优先级
+                    UserRoleEnum userRoleEnum = userService.getUserRole(loginUser);
+                    if (UserRoleEnum.isPriority(userRoleEnum, mustRoleEnum)) {
+                        return chain.filter(exchange);
+                    }
+
+                    return Mono.error(new BusinessException(ErrorCode.NO_AUTH_ERROR));
                 }
 
-                // 通过权限校验，放行
-                return chain.filter(exchange);
+                // todo 如果handler不是HandlerMethod对象，要不要直接放行
+                return Mono.error(new BusinessException(ErrorCode.SYSTEM_ERROR));
             });
     }
 }
