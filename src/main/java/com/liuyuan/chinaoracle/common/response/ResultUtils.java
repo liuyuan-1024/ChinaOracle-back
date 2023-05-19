@@ -38,8 +38,8 @@ public class ResultUtils {
     }
 
     /**
-     * 失败 todo 开发完成后删去
-     * 一般不允许返回自定义code, 故测试时可以使用这个方法，上线后此方法应当删除
+     * 失败
+     * 一般不允许返回自定义code, 只有在全局异常处理器中才会使用此方法
      *
      * @param code    自定义code
      * @param message 自定义消息
