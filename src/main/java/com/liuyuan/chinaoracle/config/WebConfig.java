@@ -1,7 +1,9 @@
 package com.liuyuan.chinaoracle.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
+import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -10,6 +12,8 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @Date: 2023/5/16 19:49
  * @Description:
  */
+@Configuration
+@EnableWebFlux
 public class WebConfig implements WebFluxConfigurer {
 
     @Bean
@@ -26,7 +30,15 @@ public class WebConfig implements WebFluxConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // WebFluxConfigurer.super.addCorsMappings(registry);
+
+        // 官网的示例代码
+//        registry.addMapping("/api/**")
+//            .allowedOrigins("https://domain2.com")
+//            .allowedMethods("PUT", "DELETE")
+//            .allowedHeaders("header1", "header2", "header3")
+//            .exposedHeaders("header1", "header2")
+//            .allowCredentials(true).maxAge(3600);
+
         // 覆盖所有请求
         registry.addMapping("/**")
             // 允许发送 Cookie

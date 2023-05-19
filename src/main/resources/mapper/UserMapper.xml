@@ -5,24 +5,75 @@
 <mapper namespace="com.liuyuan.chinaoracle.mapper.UserMapper">
 
     <resultMap id="BaseResultMap" type="com.liuyuan.chinaoracle.model.entity.User">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="email" column="email" jdbcType="VARCHAR"/>
-            <result property="password" column="password" jdbcType="VARCHAR"/>
-            <result property="unionId" column="union_id" jdbcType="VARCHAR"/>
-            <result property="mpOpenId" column="mp_open_id" jdbcType="VARCHAR"/>
-            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
-            <result property="userAvatar" column="user_avatar" jdbcType="VARCHAR"/>
-            <result property="userProfile" column="user_profile" jdbcType="VARCHAR"/>
-            <result property="userRole" column="user_role" jdbcType="VARCHAR"/>
-            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
-            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="lowerName" column="lower_name" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="fullName" column="full_name" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="keepEmailPrivate" column="keep_email_private" jdbcType="TINYINT"/>
+        <result property="emailNotificationsPreference" column="email_notifications_preference" jdbcType="VARCHAR"/>
+        <result property="passwd" column="passwd" jdbcType="VARCHAR"/>
+        <result property="passwdHashAlgo" column="passwd_hash_algo" jdbcType="VARCHAR"/>
+        <result property="mustChangePassword" column="must_change_password" jdbcType="TINYINT"/>
+        <result property="loginType" column="login_type" jdbcType="INTEGER"/>
+        <result property="loginSource" column="login_source" jdbcType="BIGINT"/>
+        <result property="loginName" column="login_name" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="location" column="location" jdbcType="VARCHAR"/>
+        <result property="website" column="website" jdbcType="VARCHAR"/>
+        <result property="rands" column="rands" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="language" column="language" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createdUnix" column="created_unix" jdbcType="BIGINT"/>
+        <result property="updatedUnix" column="updated_unix" jdbcType="BIGINT"/>
+        <result property="lastLoginUnix" column="last_login_unix" jdbcType="BIGINT"/>
+        <result property="lastRepoVisibility" column="last_repo_visibility" jdbcType="TINYINT"/>
+        <result property="maxRepoCreation" column="max_repo_creation" jdbcType="INTEGER"/>
+        <result property="isActive" column="is_active" jdbcType="TINYINT"/>
+        <result property="isAdmin" column="is_admin" jdbcType="TINYINT"/>
+        <result property="isRestricted" column="is_restricted" jdbcType="TINYINT"/>
+        <result property="allowGitHook" column="allow_git_hook" jdbcType="TINYINT"/>
+        <result property="allowImportLocal" column="allow_import_local" jdbcType="TINYINT"/>
+        <result property="allowCreateOrganization" column="allow_create_organization" jdbcType="TINYINT"/>
+        <result property="prohibitLogin" column="prohibit_login" jdbcType="TINYINT"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="avatarEmail" column="avatar_email" jdbcType="VARCHAR"/>
+        <result property="useCustomAvatar" column="use_custom_avatar" jdbcType="TINYINT"/>
+        <result property="numFollowers" column="num_followers" jdbcType="INTEGER"/>
+        <result property="numFollowing" column="num_following" jdbcType="INTEGER"/>
+        <result property="numStars" column="num_stars" jdbcType="INTEGER"/>
+        <result property="numRepos" column="num_repos" jdbcType="INTEGER"/>
+        <result property="numTeams" column="num_teams" jdbcType="INTEGER"/>
+        <result property="numMembers" column="num_members" jdbcType="INTEGER"/>
+        <result property="visibility" column="visibility" jdbcType="INTEGER"/>
+        <result property="repoAdminChangeTeamAccess" column="repo_admin_change_team_access" jdbcType="TINYINT"/>
+        <result property="diffViewStyle" column="diff_view_style" jdbcType="VARCHAR"/>
+        <result property="theme" column="theme" jdbcType="VARCHAR"/>
+        <result property="keepActivityPrivate" column="keep_activity_private" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,email,password,
-        union_id,mp_open_id,nick_name,
-        user_avatar,user_profile,user_role,
-        created_at,updated_at,is_deleted
+        id,lower_name,name,
+        full_name,email,keep_email_private,
+        email_notifications_preference,passwd,passwd_hash_algo,
+        must_change_password,login_type,login_source,
+        login_name,type,location,
+        website,rands,salt,
+        language,description,created_unix,
+        updated_unix,last_login_unix,last_repo_visibility,
+        max_repo_creation,is_active,is_admin,
+        is_restricted,allow_git_hook,allow_import_local,
+        allow_create_organization,prohibit_login,avatar,
+        avatar_email,use_custom_avatar,num_followers,
+        num_following,num_stars,num_repos,
+        num_teams,num_members,visibility,
+        repo_admin_change_team_access,diff_view_style,theme,
+        keep_activity_private
     </sql>
+    <select id="selectIsAdminById" resultType="integer">
+        select is_admin
+        from user
+        where id = #{id,jdbcType=NUMERIC}
+    </select>
 </mapper>

@@ -9,10 +9,10 @@ import org.apache.commons.lang3.ObjectUtils;
  */
 public enum UserRoleEnum {
 
-    ADMIN("管理员", UserConstant.ADMIN_ROLE, 1),
-    USER("用户", UserConstant.DEFAULT_ROLE, 2),
+    SUPER_ADMIN("超级管理员", UserConstant.SUPER_ADMIN_ROLE, 0),
+    ADMIN("系统管理员", UserConstant.ADMIN_ROLE, 1),
+    USER("普通用户", UserConstant.DEFAULT_ROLE, 2);
 
-    BAN("被封号", UserConstant.BAN_ROLE, 3);
 
     private final String text;
     private final String role;
@@ -24,6 +24,10 @@ public enum UserRoleEnum {
         this.value = value;
     }
 
+    public String getText() {
+        return text;
+    }
+
     public String getRole() {
         return role;
     }
@@ -32,9 +36,6 @@ public enum UserRoleEnum {
         return value;
     }
 
-    public String getText() {
-        return text;
-    }
 
     /**
      * 根据 role 获取枚举

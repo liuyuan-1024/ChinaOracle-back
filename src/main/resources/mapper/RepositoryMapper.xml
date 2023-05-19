@@ -5,26 +5,63 @@
 <mapper namespace="com.liuyuan.chinaoracle.mapper.RepositoryMapper">
 
     <resultMap id="BaseResultMap" type="com.liuyuan.chinaoracle.model.entity.Repository">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="ownerId" column="owner_id" jdbcType="BIGINT"/>
-            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
-            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
-            <result property="languageId" column="language_id" jdbcType="INTEGER"/>
-            <result property="stars" column="stars" jdbcType="INTEGER"/>
-            <result property="forks" column="forks" jdbcType="INTEGER"/>
-            <result property="readme" column="readme" jdbcType="VARCHAR"/>
-            <result property="licenseId" column="license_id" jdbcType="INTEGER"/>
-            <result property="isPrivate" column="is_private" jdbcType="TINYINT"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="ownerId" column="owner_id" jdbcType="BIGINT"/>
+        <result property="ownerName" column="owner_name" jdbcType="VARCHAR"/>
+        <result property="lowerName" column="lower_name" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="website" column="website" jdbcType="VARCHAR"/>
+        <result property="originalServiceType" column="original_service_type" jdbcType="INTEGER"/>
+        <result property="originalUrl" column="original_url" jdbcType="VARCHAR"/>
+        <result property="defaultBranch" column="default_branch" jdbcType="VARCHAR"/>
+        <result property="numWatches" column="num_watches" jdbcType="INTEGER"/>
+        <result property="numStars" column="num_stars" jdbcType="INTEGER"/>
+        <result property="numForks" column="num_forks" jdbcType="INTEGER"/>
+        <result property="numIssues" column="num_issues" jdbcType="INTEGER"/>
+        <result property="numClosedIssues" column="num_closed_issues" jdbcType="INTEGER"/>
+        <result property="numPulls" column="num_pulls" jdbcType="INTEGER"/>
+        <result property="numClosedPulls" column="num_closed_pulls" jdbcType="INTEGER"/>
+        <result property="numMilestones" column="num_milestones" jdbcType="INTEGER"/>
+        <result property="numClosedMilestones" column="num_closed_milestones" jdbcType="INTEGER"/>
+        <result property="numProjects" column="num_projects" jdbcType="INTEGER"/>
+        <result property="numClosedProjects" column="num_closed_projects" jdbcType="INTEGER"/>
+        <result property="numActionRuns" column="num_action_runs" jdbcType="INTEGER"/>
+        <result property="numClosedActionRuns" column="num_closed_action_runs" jdbcType="INTEGER"/>
+        <result property="isPrivate" column="is_private" jdbcType="TINYINT"/>
+        <result property="isEmpty" column="is_empty" jdbcType="TINYINT"/>
+        <result property="isArchived" column="is_archived" jdbcType="TINYINT"/>
+        <result property="isMirror" column="is_mirror" jdbcType="TINYINT"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="isFork" column="is_fork" jdbcType="TINYINT"/>
+        <result property="forkId" column="fork_id" jdbcType="BIGINT"/>
+        <result property="isTemplate" column="is_template" jdbcType="TINYINT"/>
+        <result property="templateId" column="template_id" jdbcType="BIGINT"/>
+        <result property="size" column="size" jdbcType="BIGINT"/>
+        <result property="isFsckEnabled" column="is_fsck_enabled" jdbcType="TINYINT"/>
+        <result property="closeIssuesViaCommitInAnyBranch" column="close_issues_via_commit_in_any_branch"
+                jdbcType="TINYINT"/>
+        <result property="topics" column="topics" jdbcType="VARCHAR"/>
+        <result property="trustModel" column="trust_model" jdbcType="INTEGER"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="createdUnix" column="created_unix" jdbcType="BIGINT"/>
+        <result property="updatedUnix" column="updated_unix" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,description,
-        owner_id,created_at,updated_at,
-        language_id,stars,forks,
-        readme,license_id,is_private,
-        is_deleted
+        id,owner_id,owner_name,
+        lower_name,name,description,
+        website,original_service_type,original_url,
+        default_branch,num_watches,num_stars,
+        num_forks,num_issues,num_closed_issues,
+        num_pulls,num_closed_pulls,num_milestones,
+        num_closed_milestones,num_projects,num_closed_projects,
+        num_action_runs,num_closed_action_runs,is_private,
+        is_empty,is_archived,is_mirror,
+        status,is_fork,fork_id,
+        is_template,template_id,size,
+        is_fsck_enabled,close_issues_via_commit_in_any_branch,topics,
+        trust_model,avatar,created_unix,
+        updated_unix
     </sql>
 </mapper>

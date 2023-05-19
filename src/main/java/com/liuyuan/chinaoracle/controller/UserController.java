@@ -6,7 +6,6 @@ import com.liuyuan.chinaoracle.common.DeleteRequest;
 import com.liuyuan.chinaoracle.common.response.BaseResponse;
 import com.liuyuan.chinaoracle.common.response.ErrorCode;
 import com.liuyuan.chinaoracle.common.response.ResultUtils;
-import com.liuyuan.chinaoracle.config.WxOpenConfig;
 import com.liuyuan.chinaoracle.constant.UserConstant;
 import com.liuyuan.chinaoracle.exception.BusinessException;
 import com.liuyuan.chinaoracle.exception.ThrowUtils;
@@ -16,9 +15,6 @@ import com.liuyuan.chinaoracle.model.vo.LoginUserVO;
 import com.liuyuan.chinaoracle.model.vo.UserVO;
 import com.liuyuan.chinaoracle.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
-import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
-import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +33,6 @@ public class UserController {
 
     @Resource
     private UserService userService;
-
-    @Resource
-    private WxOpenConfig wxOpenConfig;
 
     // region 登录相关
 
@@ -84,33 +77,6 @@ public class UserController {
         }
         LoginUserVO loginUserVO = userService.userLogin(email, password, exchange);
         return ResultUtils.success(loginUserVO);
-    }
-
-    /**
-     * 用户登录(微信开放平台)
-     *
-     * @param exchange 代表一次HTTP请求和响应的完整过程的对象
-     * @param code     todo 不知道这是啥
-     * @return 统一响应结果
-     */
-    @GetMapping("/login/wx_open")
-    public BaseResponse<LoginUserVO> userLoginByWxOpen(ServerWebExchange exchange,
-                                                       @RequestParam("code") String code) {
-        WxOAuth2AccessToken accessToken;
-        try {
-            WxMpService wxService = wxOpenConfig.getWxMpService();
-            accessToken = wxService.getOAuth2Service().getAccessToken(code);
-            WxOAuth2UserInfo userInfo = wxService.getOAuth2Service().getUserInfo(accessToken, code);
-            String unionId = userInfo.getUnionId();
-            String mpOpenId = userInfo.getOpenid();
-            if (StringUtils.isAnyBlank(unionId, mpOpenId)) {
-                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败，系统错误");
-            }
-            return ResultUtils.success(userService.userLoginByMpOpen(userInfo, exchange));
-        } catch (Exception e) {
-            log.error("userLoginByWxOpen error", e);
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败，系统错误");
-        }
     }
 
     /**
@@ -212,25 +178,6 @@ public class UserController {
 
 
     // region 增删改查(admin权限)
-
-    /**
-     * 创建用户（仅管理员）
-     *
-     * @param userAddRequest 用户创建请求体
-     * @return 统一响应结果
-     */
-    @PostMapping("/add")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
-        if (userAddRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = new User();
-        BeanUtils.copyProperties(userAddRequest, user);
-        boolean result = userService.save(user);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(user.getId());
-    }
 
     /**
      * 删除用户（仅管理员）

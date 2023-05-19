@@ -3,7 +3,6 @@ package com.liuyuan.chinaoracle.model.vo;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 仓库视图（脱敏）
@@ -12,59 +11,194 @@ import java.util.Date;
 public class RepositoryVO implements Serializable {
 
     /**
+     * id
+     */
+    private Long id;
+
+    /**
+     * 拥有者ID
+     */
+    private Long ownerId;
+
+    /**
+     * 拥有者name(User.name)
+     */
+    private String ownerName;
+
+    /**
+     * 小写name
+     */
+    private String lowerName;
+
+    /**
      * 仓库名称
      */
     private String name;
 
     /**
-     * 仓库的描述信息
+     * 描述
      */
     private String description;
 
     /**
-     * 仓库所有者的ID
+     * 网站
      */
-    private Long ownerId;
+    private String website;
 
     /**
-     * 创建时间
+     * 远程服务类型
      */
-    private Date createdAt;
+    private Integer originalServiceType;
 
     /**
-     * 最后更新时间
+     * 远程url
      */
-    private Date updatedAt;
+    private String originalUrl;
 
     /**
-     * 仓库主要使用的编程语言
+     * 默认分支
      */
-    private String languageName;
+    private String defaultBranch;
 
     /**
-     * 仓库的星标数
+     * 观察者数量
      */
-    private Integer stars;
+    private Integer numWatches;
 
     /**
-     * 仓库的分支数
+     * star数量
      */
-    private Integer forks;
+    private Integer numStars;
 
     /**
-     * 仓库的README文件内容
+     * 拷贝分支数量
      */
-    private String readme;
+    private Integer numForks;
 
     /**
-     * 开源协议的名称
+     * 问题数量
      */
-    private String licenseName;
+    private Integer numIssues;
 
     /**
-     * 开源协议的URL地址
+     * 已关闭问题的数量
      */
-    private String licenseUrl;
+    private Integer numClosedIssues;
+
+    /**
+     * 拉取数量
+     */
+    private Integer numPulls;
+
+    /**
+     * 已关闭拉取的数量
+     */
+    private Integer numClosedPulls;
+
+    /**
+     * 里程碑数量
+     */
+    private Integer numMilestones;
+
+    /**
+     * 已关闭里程碑的数量
+     */
+    private Integer numClosedMilestones;
+
+    /**
+     * 项目数量
+     */
+    private Integer numProjects;
+
+    /**
+     * 已关闭项目的数量
+     */
+    private Integer numClosedProjects;
+
+    /**
+     *
+     */
+    private Integer numActionRuns;
+
+    /**
+     *
+     */
+    private Integer numClosedActionRuns;
+
+    /**
+     * 是否私有
+     */
+    private Integer isPrivate;
+
+    /**
+     * 是否为空
+     */
+    private Integer isEmpty;
+
+    /**
+     * 是否已存档
+     */
+    private Integer isArchived;
+
+    /**
+     * 是否镜像
+     */
+    private Integer isMirror;
+
+    /**
+     * 状态
+     */
+    private Integer status;
+
+    /**
+     * 允许fork
+     */
+    private Integer isFork;
+
+    /**
+     * 拷贝分支的ID
+     */
+    private Long forkId;
+
+    /**
+     * 是否为模板
+     */
+    private Integer isTemplate;
+
+    /**
+     * 模板ID
+     */
+    private Long templateId;
+
+    /**
+     * 大小
+     */
+    private Long size;
+
+    /**
+     *
+     */
+    private Integer isFsckEnabled;
+
+    /**
+     *
+     */
+    private Integer closeIssuesViaCommitInAnyBranch;
+
+    /**
+     * 话题
+     */
+    private String topics;
+
+    /**
+     * 信任模型
+     */
+    private Integer trustModel;
+
+    /**
+     * 头像
+     */
+    private String avatar;
 
     private static final long serialVersionUID = 1L;
 }

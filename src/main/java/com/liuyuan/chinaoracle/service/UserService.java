@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.liuyuan.chinaoracle.model.dto.user.UserQueryRequest;
 import com.liuyuan.chinaoracle.model.entity.User;
+import com.liuyuan.chinaoracle.model.enums.UserRoleEnum;
 import com.liuyuan.chinaoracle.model.vo.LoginUserVO;
 import com.liuyuan.chinaoracle.model.vo.UserVO;
-import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.util.List;
@@ -34,26 +34,22 @@ public interface UserService extends IService<User> {
      * @param password 用户密码
      * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
      *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
-     * @return 脱敏后的用户信息
      */
     LoginUserVO userLogin(String email, String password, ServerWebExchange exchange);
 
     /**
-     * 用户登录（微信开放平台）
+     * 用户注销
      *
-     * @param wxOAuth2UserInfo 从微信获取的用户信息
-     * @param exchange         WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
-     *                         (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
-     * @return 脱敏后的用户信息
+     * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
+     *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
      */
-    LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo, ServerWebExchange exchange);
+    boolean userLogout(ServerWebExchange exchange);
 
     /**
      * 获取当前登录用户
      *
      * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
      *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
-     * @return
      */
     User getLoginUser(ServerWebExchange exchange);
 
@@ -62,48 +58,41 @@ public interface UserService extends IService<User> {
      *
      * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
      *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
-     * @return
      */
     User getLoginUserPermitNull(ServerWebExchange exchange);
 
     /**
-     * 是否为管理员
+     * 获取用户权限的枚举对象
      *
-     * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
-     *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
-     * @return
+     * @param user 用户
      */
-    boolean isAdmin(ServerWebExchange exchange);
+    UserRoleEnum getUserRole(User user);
 
     /**
      * 是否为管理员
      *
      * @param user 用户
-     * @return
      */
     boolean isAdmin(User user);
+
+    /**
+     * 是否为超级管理员
+     *
+     * @param user 用户
+     */
+    boolean isSuperAdmin(User user);
 
     /**
      * 是否被封禁
      *
      * @param user 用户
-     * @return
      */
-    boolean isBan(User user);
-
-    /**
-     * 用户注销
-     *
-     * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
-     *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
-     * @return
-     */
-    boolean userLogout(ServerWebExchange exchange);
+    boolean isProhibitLogin(User user);
 
     /**
      * 获取脱敏的已登录用户信息
      *
-     * @return
+     * @param user 用户
      */
     LoginUserVO getLoginUserVO(User user);
 
@@ -111,7 +100,6 @@ public interface UserService extends IService<User> {
      * 获取脱敏的用户信息
      *
      * @param user 用户
-     * @return
      */
     UserVO getUserVO(User user);
 
@@ -119,7 +107,6 @@ public interface UserService extends IService<User> {
      * 获取脱敏的用户信息
      *
      * @param userList 用户列表
-     * @return
      */
     List<UserVO> getUserVO(List<User> userList);
 
@@ -127,7 +114,6 @@ public interface UserService extends IService<User> {
      * 获取查询条件
      *
      * @param userQueryRequest 用户查询请求体
-     * @return
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 }

@@ -17,7 +17,7 @@ import com.liuyuan.chinaoracle.model.vo.UserVO;
 import com.liuyuan.chinaoracle.service.UserService;
 import com.liuyuan.chinaoracle.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -75,7 +75,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 3. 插入数据
             User user = new User();
             user.setEmail(email);
-            user.setPassword(encryptPassword);
+            user.setPasswd(encryptPassword);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
@@ -101,14 +101,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 查询用户是否存在
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getEmail, email);
-        queryWrapper.eq(User::getPassword, encryptPassword);
+        queryWrapper.eq(User::getPasswd, encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
         // 用户不存在
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 用户被封禁
-        if (this.isBan(user)) {
+        if (this.isProhibitLogin(user)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         // 3. 记录用户的登录态
@@ -117,35 +117,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo, ServerWebExchange exchange) {
-        String unionId = wxOAuth2UserInfo.getUnionId();
-        String mpOpenId = wxOAuth2UserInfo.getOpenid();
-        // 单机锁
-        synchronized (unionId.intern()) {
-            // 查询用户是否已存在
-            LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(User::getUnionId, unionId);
-            User user = this.getOne(queryWrapper);
-            // 被封号，禁止登录
-            if (this.isBan(user)) {
-                throw new BusinessException(ErrorCode.FORBIDDEN_ERROR, "该用户已被封，禁止登录");
-            }
-            // 用户不存在则创建
-            if (user == null) {
-                user = new User();
-                user.setUnionId(unionId);
-                user.setMpOpenId(mpOpenId);
-                user.setUserAvatar(wxOAuth2UserInfo.getHeadImgUrl());
-                user.setNickName(wxOAuth2UserInfo.getNickname());
-                boolean result = this.save(user);
-                if (!result) {
-                    throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败");
-                }
-            }
-            // 记录用户的登录态
-            exchange.getAttributes().put(USER_LOGIN_STATE, user);
-            return getLoginUserVO(user);
+    public boolean userLogout(ServerWebExchange exchange) {
+        // todo 查看获取的attribute的value是不是null
+        if (exchange.getAttribute(USER_LOGIN_STATE) == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
         }
+        // 移除登录态
+        exchange.getAttributes().put(USER_LOGIN_STATE, null);
+        return true;
     }
 
     @Override
@@ -183,51 +162,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean isAdmin(ServerWebExchange exchange) {
-        // 仅管理员可查询
-        Object userObj = exchange.getAttribute(USER_LOGIN_STATE);
-        User user = (User) userObj;
-        return isAdmin(user);
+    public UserRoleEnum getUserRole(User user) {
+        // todo 如何获取用户的角色
+        return null;
     }
 
     @Override
     public boolean isAdmin(User user) {
-        return user != null && UserRoleEnum.ADMIN.getRole().equals(user.getUserRole());
+        return user != null;
     }
 
     @Override
-    public boolean isBan(User user) {
-        if (user == null) {
-            return false;
-        }
-        return UserRoleEnum.BAN.getRole().equals(user.getUserRole());
+    public boolean isSuperAdmin(User user) {
+        Integer isAdmin = userMapper.selectById(user.getId()).getIsAdmin();
+        return isAdmin == 1;
     }
 
     @Override
-    public boolean userLogout(ServerWebExchange exchange) {
-        // todo 查看获取的attribute的value是不是null
-        if (exchange.getAttribute(USER_LOGIN_STATE) == null) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
-        }
-        // 移除登录态
-        exchange.getAttributes().put(USER_LOGIN_STATE, null);
-        return true;
+    public boolean isProhibitLogin(User user) {
+        return !ObjectUtils.isEmpty(user) && user.getProhibitLogin() == 0;
     }
+
 
     @Override
     public LoginUserVO getLoginUserVO(User user) {
-        if (user == null) {
-            return null;
-        }
-        return UserConvert.INSTANCE.toLoginUserVo(user);
+        return ObjectUtils.isEmpty(user) ? null : UserConvert.INSTANCE.toLoginUserVo(user);
     }
 
     @Override
     public UserVO getUserVO(User user) {
-        if (user == null) {
-            return null;
-        }
-        return UserConvert.INSTANCE.toUserVo(user);
+        return ObjectUtils.isEmpty(user) ? null : UserConvert.INSTANCE.toUserVo(user);
     }
 
     @Override
@@ -245,21 +209,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         Long id = userQueryRequest.getId();
-        String unionId = userQueryRequest.getUnionId();
-        String mpOpenId = userQueryRequest.getMpOpenId();
-        String nickName = userQueryRequest.getNickName();
-        String userProfile = userQueryRequest.getUserProfile();
-        String userRole = userQueryRequest.getUserRole();
+        String nickName = userQueryRequest.getFullName();
+        String description = userQueryRequest.getDescription();
         String sortField = userQueryRequest.getSortField();
         boolean isAsc = userQueryRequest.getSortOrder().equals(CommonConstant.SORT_ORDER_ASC);
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(id != null, User::getId, id);
-        queryWrapper.lambda().eq(StringUtils.isNotBlank(unionId), User::getUnionId, unionId);
-        queryWrapper.lambda().eq(StringUtils.isNotBlank(mpOpenId), User::getMpOpenId, mpOpenId);
-        queryWrapper.lambda().eq(StringUtils.isNotBlank(userRole), User::getUserRole, userRole);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(userProfile), User::getUserProfile, userProfile);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(nickName), User::getNickName, nickName);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(description), User::getDescription, description);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(nickName), User::getFullName, nickName);
         queryWrapper.orderBy(SqlUtils.verifySortField(sortField), isAsc, sortField);
 
         return queryWrapper;

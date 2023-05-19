@@ -18,29 +18,84 @@ public class UserQueryRequest extends PageRequest implements Serializable {
     private Long id;
 
     /**
-     * 开放平台id
+     * 全称(自定义名称、昵称)
      */
-    private String unionId;
+    private String fullName;
 
     /**
-     * 公众号openId
+     * 邮箱
      */
-    private String mpOpenId;
+    private String email;
 
     /**
-     * 用户昵称
+     * 登录类型
      */
-    private String nickName;
+    private Integer loginType;
 
     /**
-     * 简介
+     *
      */
-    private String userProfile;
+    private Long loginSource;
 
     /**
-     * 用户角色：user/admin/ban
+     * 登录名称
      */
-    private String userRole;
+    private String loginName;
+
+    /**
+     * 类型
+     */
+    private Integer type;
+
+    /**
+     * 位置
+     */
+    private String location;
+
+    /**
+     * 网站
+     */
+    private String website;
+
+    /**
+     *
+     */
+    private String rands;
+
+    /**
+     * 语言
+     */
+    private String language;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+    /**
+     *
+     */
+    private Integer lastRepoVisibility;
+
+    /**
+     *
+     */
+    private Integer maxRepoCreation;
+
+    /**
+     * 活跃状态
+     */
+    private Integer isActive;
+
+    /**
+     * 是否受限
+     */
+    private Integer isRestricted;
+
+    /**
+     * 活动保密
+     */
+    private Integer keepActivityPrivate;
 
     private static final long serialVersionUID = 1L;
 }

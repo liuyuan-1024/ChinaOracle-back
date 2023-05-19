@@ -7,21 +7,33 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * 用户表
+ * gitea 仓库的用户表
  *
  * @TableName user
  */
 @TableName(value = "user")
 @Data
 public class User implements Serializable {
-    /**
-     * 用户ID
-     */
+
     @TableId(type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 小写 name
+     */
+    private String lowerName;
+
+    /**
+     * 用户名
+     */
+    private String name;
+
+    /**
+     * 全称(自定义名称、昵称)
+     */
+    private String fullName;
 
     /**
      * 邮箱
@@ -29,54 +41,209 @@ public class User implements Serializable {
     private String email;
 
     /**
+     * 保持email私密
+     */
+    private Integer keepEmailPrivate;
+
+    /**
+     * email通知首选项
+     */
+    private String emailNotificationsPreference;
+
+    /**
      * 密码
      */
-    private String password;
+    private String passwd;
 
     /**
-     * 微信开放平台id
+     * 密码哈希算法
      */
-    private String unionId;
+    private String passwdHashAlgo;
 
     /**
-     * 公众号openId
+     *
      */
-    private String mpOpenId;
+    private Integer mustChangePassword;
 
     /**
-     * 用户昵称
+     * 登录类型
      */
-    private String nickName;
+    private Integer loginType;
 
     /**
-     * 用户头像
+     *
      */
-    private String userAvatar;
+    private Long loginSource;
 
     /**
-     * 用户简介
+     * 登录名称
      */
-    private String userProfile;
+    private String loginName;
 
     /**
-     * 用户角色: user/admin/ban
+     * 类型
      */
-    private String userRole;
+    private Integer type;
 
     /**
-     * 创建时间
+     * 所在地区
      */
-    private Date createdAt;
+    private String location;
 
     /**
-     * 最后更新时间
+     * 网站
      */
-    private Date updatedAt;
+    private String website;
 
     /**
-     * 是否已删除(0-未删除 1-已删除)
+     *
      */
-    private Integer isDeleted;
+    private String rands;
+
+    /**
+     * 盐
+     */
+    private String salt;
+
+    /**
+     * 语言
+     */
+    private String language;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+    /**
+     * 创建者
+     */
+    private Long createdUnix;
+
+    /**
+     * 更新者
+     */
+    private Long updatedUnix;
+
+    /**
+     *
+     */
+    private Long lastLoginUnix;
+
+    /**
+     *
+     */
+    private Integer lastRepoVisibility;
+
+    /**
+     *
+     */
+    private Integer maxRepoCreation;
+
+    /**
+     * 活跃状态
+     */
+    private Integer isActive;
+
+    /**
+     * 是否为系统管理员
+     */
+    private Integer isAdmin;
+
+    /**
+     * 是否受限
+     */
+    private Integer isRestricted;
+
+    /**
+     * 允许GitHook
+     */
+    private Integer allowGitHook;
+
+    /**
+     * 允许本地导入
+     */
+    private Integer allowImportLocal;
+
+    /**
+     * 允许创建远程分支
+     */
+    private Integer allowCreateOrganization;
+
+    /**
+     * 禁止登录
+     */
+    private Integer prohibitLogin;
+
+    /**
+     * 头像
+     */
+    private String avatar;
+
+    /**
+     * email头像
+     */
+    private String avatarEmail;
+
+    /**
+     * 用户自定义头像
+     */
+    private Integer useCustomAvatar;
+
+    /**
+     * 追随者数量
+     */
+    private Integer numFollowers;
+
+    /**
+     *
+     */
+    private Integer numFollowing;
+
+    /**
+     * star数量
+     */
+    private Integer numStars;
+
+    /**
+     * 仓库数量
+     */
+    private Integer numRepos;
+
+    /**
+     * 团队数量
+     */
+    private Integer numTeams;
+
+    /**
+     * 成员数量
+     */
+    private Integer numMembers;
+
+    /**
+     * 可见度
+     */
+    private Integer visibility;
+
+    /**
+     * 仓库管理员修改团队权限
+     */
+    private Integer repoAdminChangeTeamAccess;
+
+    /**
+     * 不同视图样式
+     */
+    private String diffViewStyle;
+
+    /**
+     * 主题(默认: auto)
+     */
+    private String theme;
+
+    /**
+     * 活动保密
+     */
+    private Integer keepActivityPrivate;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

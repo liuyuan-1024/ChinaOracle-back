@@ -10,18 +10,13 @@ import com.liuyuan.chinaoracle.exception.ThrowUtils;
 import com.liuyuan.chinaoracle.mapper.RepositoryMapper;
 import com.liuyuan.chinaoracle.model.conversion.RepositoryConvert;
 import com.liuyuan.chinaoracle.model.dto.repository.RepositoryQueryRequest;
-import com.liuyuan.chinaoracle.model.entity.Language;
-import com.liuyuan.chinaoracle.model.entity.License;
 import com.liuyuan.chinaoracle.model.entity.Repository;
 import com.liuyuan.chinaoracle.model.vo.RepositoryVO;
-import com.liuyuan.chinaoracle.service.LanguageService;
-import com.liuyuan.chinaoracle.service.LicenseService;
 import com.liuyuan.chinaoracle.service.RepositoryService;
 import com.liuyuan.chinaoracle.utils.SqlUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,13 +29,6 @@ import java.util.stream.Collectors;
 @Service
 public class RepositoryServiceImpl extends ServiceImpl<RepositoryMapper, Repository> implements RepositoryService {
 
-    @Resource
-    private LanguageService languageService;
-
-    @Resource
-    private LicenseService licenseService;
-
-
     @Override
     public void verifyRepository(Repository repository, boolean add) {
         if (repository == null) {
@@ -52,18 +40,14 @@ public class RepositoryServiceImpl extends ServiceImpl<RepositoryMapper, Reposit
         String name = repository.getName();
         String description = repository.getDescription();
         Long ownerId = repository.getOwnerId();
-        Integer languageId = repository.getLanguageId();
-        String readme = repository.getReadme();
-        Integer licenseId = repository.getLicenseId();
 
         // 创建时，参数不能为空
         if (add) {
-            ThrowUtils.throwIf(StringUtils.isAnyBlank(name, description, readme), ErrorCode.PARAMS_ERROR);
+            ThrowUtils.throwIf(StringUtils.isAnyBlank(name, description), ErrorCode.PARAMS_ERROR);
         }
 
         // 参数校验
-        boolean flag = id == null || ownerId == null || languageId == null || licenseId == null
-            || id <= 0 || ownerId <= 0 || languageId <= 0 || licenseId <= 0;
+        boolean flag = id == null || ownerId == null || id <= 0 || ownerId <= 0;
         ThrowUtils.throwIf(flag, ErrorCode.PARAMS_ERROR);
 
         // 有参数则校验
@@ -72,9 +56,6 @@ public class RepositoryServiceImpl extends ServiceImpl<RepositoryMapper, Reposit
         }
         if (StringUtils.isNotBlank(description) && description.length() > 2048) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "仓库描述过长");
-        }
-        if (StringUtils.isNotBlank(readme) && readme.length() > 8192) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "README过长");
         }
     }
 
@@ -87,13 +68,7 @@ public class RepositoryServiceImpl extends ServiceImpl<RepositoryMapper, Reposit
         // 参数校验
         this.verifyRepository(repository, false);
 
-        Integer languageId = repository.getLanguageId();
-        Integer licenseId = repository.getLicenseId();
-
-        Language language = languageService.getById(languageId);
-        License license = licenseService.getById(licenseId);
-
-        return RepositoryConvert.INSTANCE.toRepositoryVo(repository, language, license);
+        return RepositoryConvert.INSTANCE.toRepositoryVo(repository);
     }
 
     @Override
@@ -115,9 +90,6 @@ public class RepositoryServiceImpl extends ServiceImpl<RepositoryMapper, Reposit
         String name = repositoryQueryRequest.getName();
         String description = repositoryQueryRequest.getDescription();
         Long ownerId = repositoryQueryRequest.getOwnerId();
-        Integer languageId = repositoryQueryRequest.getLanguageId();
-        String readme = repositoryQueryRequest.getReadme();
-        Integer licenseId = repositoryQueryRequest.getLicenseId();
         String sortField = repositoryQueryRequest.getSortField();
 
         boolean isAsc = repositoryQueryRequest.getSortOrder().equals(CommonConstant.SORT_ORDER_ASC);
@@ -127,9 +99,6 @@ public class RepositoryServiceImpl extends ServiceImpl<RepositoryMapper, Reposit
         queryWrapper.lambda().like(StringUtils.isNotBlank(name), Repository::getName, name);
         queryWrapper.lambda().like(StringUtils.isNotBlank(description), Repository::getDescription, description);
         queryWrapper.lambda().eq(ownerId != null, Repository::getOwnerId, ownerId);
-        queryWrapper.lambda().eq(languageId != null, Repository::getLanguageId, languageId);
-        queryWrapper.lambda().eq(licenseId != null, Repository::getLicenseId, licenseId);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(readme), Repository::getReadme, readme);
 
         queryWrapper.orderBy(SqlUtils.verifySortField(sortField), isAsc, sortField);
 

@@ -23,7 +23,7 @@ public interface UserConstant {
     String ADMIN_ROLE = "admin";
 
     /**
-     * 被封号
+     * 仓库管理员
      */
-    String BAN_ROLE = "ban";
+    String SUPER_ADMIN_ROLE = "super_admin";
 }
