@@ -17,32 +17,27 @@ import java.util.Date;
 @TableName(value = "star")
 @Data
 public class Star implements Serializable {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * id
      */
     @TableId(type = IdType.AUTO)
     private Long id;
-
     /**
      * 用户id
      */
     private Long userId;
-
     /**
      * 仓库id
      */
     private Long repositoryId;
-
     /**
      * 创建时间
      */
     private Date createdAt;
-
     /**
      * 最后更新时间
      */
     private Date updatedAt;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

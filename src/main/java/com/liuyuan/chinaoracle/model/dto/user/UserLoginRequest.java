@@ -10,9 +10,7 @@ import java.io.Serializable;
 @Data
 public class UserLoginRequest implements Serializable {
 
-    private String email;
-
-    private String password;
-
     private static final long serialVersionUID = 3191241716373120793L;
+    private String email;
+    private String password;
 }

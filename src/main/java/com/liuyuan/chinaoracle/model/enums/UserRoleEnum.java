@@ -24,19 +24,6 @@ public enum UserRoleEnum {
         this.value = value;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-
     /**
      * 根据 role 获取枚举
      *
@@ -64,6 +51,18 @@ public enum UserRoleEnum {
      */
     public static boolean isPriority(UserRoleEnum role, UserRoleEnum mustRole) {
         return role.getValue() - mustRole.getValue() <= 0;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Integer getValue() {
+        return value;
     }
 
 }

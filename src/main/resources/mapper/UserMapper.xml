@@ -11,7 +11,8 @@
         <result property="fullName" column="full_name" jdbcType="VARCHAR"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="keepEmailPrivate" column="keep_email_private" jdbcType="TINYINT"/>
-        <result property="emailNotificationsPreference" column="email_notifications_preference" jdbcType="VARCHAR"/>
+        <result property="emailNotificationsPreference" column="email_notifications_preference"
+                jdbcType="VARCHAR"/>
         <result property="passwd" column="passwd" jdbcType="VARCHAR"/>
         <result property="passwdHashAlgo" column="passwd_hash_algo" jdbcType="VARCHAR"/>
         <result property="mustChangePassword" column="must_change_password" jdbcType="TINYINT"/>
@@ -47,7 +48,8 @@
         <result property="numTeams" column="num_teams" jdbcType="INTEGER"/>
         <result property="numMembers" column="num_members" jdbcType="INTEGER"/>
         <result property="visibility" column="visibility" jdbcType="INTEGER"/>
-        <result property="repoAdminChangeTeamAccess" column="repo_admin_change_team_access" jdbcType="TINYINT"/>
+        <result property="repoAdminChangeTeamAccess" column="repo_admin_change_team_access"
+                jdbcType="TINYINT"/>
         <result property="diffViewStyle" column="diff_view_style" jdbcType="VARCHAR"/>
         <result property="theme" column="theme" jdbcType="VARCHAR"/>
         <result property="keepActivityPrivate" column="keep_activity_private" jdbcType="TINYINT"/>
