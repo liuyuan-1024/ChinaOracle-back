@@ -36,7 +36,8 @@
         <result property="isRestricted" column="is_restricted" jdbcType="TINYINT"/>
         <result property="allowGitHook" column="allow_git_hook" jdbcType="TINYINT"/>
         <result property="allowImportLocal" column="allow_import_local" jdbcType="TINYINT"/>
-        <result property="allowCreateOrganization" column="allow_create_organization" jdbcType="TINYINT"/>
+        <result property="allowCreateOrganization" column="allow_create_organization"
+                jdbcType="TINYINT"/>
         <result property="prohibitLogin" column="prohibit_login" jdbcType="TINYINT"/>
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
         <result property="avatarEmail" column="avatar_email" jdbcType="VARCHAR"/>

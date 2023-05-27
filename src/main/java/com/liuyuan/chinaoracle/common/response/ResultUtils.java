@@ -13,7 +13,8 @@ public class ResultUtils {
      * @return 统一响应类对象
      */
     public static <T> BaseResponse<T> success(T data) {
-        return new BaseResponse<>(ErrorCode.SUCCESS.getCode(), data, ErrorCode.SUCCESS.getMessage());
+        return new BaseResponse<>(ErrorCode.SUCCESS.getCode(), data,
+            ErrorCode.SUCCESS.getMessage());
     }
 
     /**

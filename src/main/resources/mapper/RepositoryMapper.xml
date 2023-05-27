@@ -39,7 +39,8 @@
         <result property="templateId" column="template_id" jdbcType="BIGINT"/>
         <result property="size" column="size" jdbcType="BIGINT"/>
         <result property="isFsckEnabled" column="is_fsck_enabled" jdbcType="TINYINT"/>
-        <result property="closeIssuesViaCommitInAnyBranch" column="close_issues_via_commit_in_any_branch"
+        <result property="closeIssuesViaCommitInAnyBranch"
+                column="close_issues_via_commit_in_any_branch"
                 jdbcType="TINYINT"/>
         <result property="topics" column="topics" jdbcType="VARCHAR"/>
         <result property="trustModel" column="trust_model" jdbcType="INTEGER"/>

@@ -60,7 +60,8 @@ public class AuthFilter implements WebFilter {
 
                     // 必需权限非真实存在，可能是controller接口中@AuthCheck的mustRole赋值错误
                     if (ObjectUtils.isEmpty(mustRoleEnum)) {
-                        return Mono.error(new BusinessException(ErrorCode.SYSTEM_ERROR, "必需权限不存在,严查开发人员"));
+                        return Mono.error(new BusinessException(ErrorCode.SYSTEM_ERROR, "必需权限不存在," +
+                            "严查开发人员"));
                     }
 
                     // 比较用户权限的优先级

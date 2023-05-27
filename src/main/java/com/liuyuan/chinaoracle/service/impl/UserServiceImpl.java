@@ -216,7 +216,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(id != null, User::getId, id);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(description), User::getDescription, description);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(description), User::getDescription,
+            description);
         queryWrapper.lambda().like(StringUtils.isNotBlank(nickName), User::getFullName, nickName);
         queryWrapper.orderBy(SqlUtils.verifySortField(sortField), isAsc, sortField);
 

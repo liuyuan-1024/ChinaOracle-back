@@ -37,7 +37,8 @@ public class StarController {
      * @return 本次点赞变化数
      */
     @PostMapping("/")
-    public BaseResponse<Integer> doStar(@RequestBody StarRequest starRequest, ServerWebExchange exchange) {
+    public BaseResponse<Integer> doStar(@RequestBody StarRequest starRequest,
+                                        ServerWebExchange exchange) {
 
         if (starRequest == null || starRequest.getRepositoryId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

@@ -97,7 +97,8 @@ public class RepositoryServiceImpl extends ServiceImpl<RepositoryMapper, Reposit
         QueryWrapper<Repository> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(id != null, Repository::getId, id);
         queryWrapper.lambda().like(StringUtils.isNotBlank(name), Repository::getName, name);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(description), Repository::getDescription, description);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(description), Repository::getDescription,
+            description);
         queryWrapper.lambda().eq(ownerId != null, Repository::getOwnerId, ownerId);
 
         queryWrapper.orderBy(SqlUtils.verifySortField(sortField), isAsc, sortField);

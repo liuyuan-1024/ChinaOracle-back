@@ -56,8 +56,8 @@ public class RepositoryController {
      */
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Page<RepositoryVO>> listRepositoryVOByPage(@RequestBody
-                                                                   RepositoryQueryRequest repositoryQueryRequest) {
+    public BaseResponse<Page<RepositoryVO>> listRepositoryVOByPage
+    (@RequestBody RepositoryQueryRequest repositoryQueryRequest) {
 
         if (repositoryQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -70,7 +70,8 @@ public class RepositoryController {
         Page<Repository> repositoryPage = repositoryService.page(new Page<>(current, size),
             repositoryService.getQueryWrapper(repositoryQueryRequest));
         // 实体转为视图
-        List<RepositoryVO> repositoryVOList = repositoryService.getRepositoryVO(repositoryPage.getRecords());
+        List<RepositoryVO> repositoryVOList =
+            repositoryService.getRepositoryVO(repositoryPage.getRecords());
         // 分页
         Page<RepositoryVO> repositoryVOPage = new Page<>(current, size, repositoryPage.getTotal());
         repositoryVOPage.setRecords(repositoryVOList);
