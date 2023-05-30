@@ -4,13 +4,14 @@
 
 ### 主流框架 & 特性
 
-- Spring Boot 2.7.x（贼新）
+- Spring Boot 2.7.6
 - Spring WebFlux(非阻塞式HTTP请求框架, 与druid不兼容)
 - MyBatis + MyBatis Plus 数据访问（开启分页）
 - Spring Boot 调试工具和项目处理器
 - Spring AOP 切面编程
 - Spring Scheduler 定时任务
 - Spring 事务注解
+- JGit Git版本管理库(Java编写)
 
 ### 数据存储
 
