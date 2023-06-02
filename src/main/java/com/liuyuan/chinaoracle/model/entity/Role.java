@@ -10,48 +10,32 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户表
+ * 角色表
  *
- * @TableName user
+ * @TableName role
  */
-@TableName(value = "user")
+@TableName(value = "role")
 @Data
-public class User implements Serializable {
+public class Role implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
-     * 用户ID
+     * 角色ID
      */
     @TableId(type = IdType.AUTO)
-    private Long id;
+    private Integer id;
     /**
-     * 邮箱
+     * 角色名称
      */
-    private String email;
+    private String name;
     /**
-     * 密码
+     * 角色描述
      */
-    private String password;
+    private String description;
     /**
-     * 昵称
+     * 角色状态
      */
-    private String nickName;
-    /**
-     * 头像
-     */
-    private String avatar;
-    /**
-     * 简介
-     */
-    private String profile;
-    /**
-     * 权限等级, 数值越大权限越大
-     */
-    private Integer role;
-    /**
-     * 0-未封禁 1-被封禁
-     */
-    private Integer isBan;
+    private Integer status;
     /**
      * 创建时间
      */
@@ -60,8 +44,5 @@ public class User implements Serializable {
      * 最后更新时间
      */
     private Date updatedAt;
-    /**
-     * 是否已删除(0-未删除 1-已删除)
-     */
-    private Integer isDeleted;
+
 }

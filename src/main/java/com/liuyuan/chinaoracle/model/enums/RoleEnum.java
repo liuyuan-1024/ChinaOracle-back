@@ -7,19 +7,17 @@ import org.apache.commons.lang3.ObjectUtils;
  * 用户角色枚举
  * 角色权限优先级: 数字越小, 优先级越高
  */
-public enum UserRoleEnum {
+public enum RoleEnum {
 
-    SUPER_ADMIN("超级管理员", UserConstant.SUPER_ADMIN_ROLE, 0),
-    ADMIN("系统管理员", UserConstant.ADMIN_ROLE, 1),
-    USER("普通用户", UserConstant.DEFAULT_ROLE, 2);
+    SUPER_ADMIN(UserConstant.SUPER_ADMIN_ROLE, 0),
+    ADMIN(UserConstant.ADMIN_ROLE, 1),
+    USER(UserConstant.DEFAULT_ROLE, 2);
 
 
-    private final String text;
     private final String role;
     private final Integer value;
 
-    UserRoleEnum(String text, String role, int value) {
-        this.text = text;
+    RoleEnum(String role, int value) {
         this.role = role;
         this.value = value;
     }
@@ -30,11 +28,11 @@ public enum UserRoleEnum {
      * @param role 具体权限
      * @return 对应的用户角色枚举类对象
      */
-    public static UserRoleEnum getEnumByRole(String role) {
+    public static RoleEnum getEnumByRole(String role) {
         if (ObjectUtils.isEmpty(role)) {
             return null;
         }
-        for (UserRoleEnum anEnum : UserRoleEnum.values()) {
+        for (RoleEnum anEnum : RoleEnum.values()) {
             if (anEnum.role.equals(role)) {
                 return anEnum;
             }
@@ -45,16 +43,12 @@ public enum UserRoleEnum {
     /**
      * 判断当前权限是否优先于必需权限
      *
-     * @param role     当前权限
-     * @param mustRole 必需权限
+     * @param roleEnum     当前权限
+     * @param mustRoleEnum 必需权限
      * @return true or false
      */
-    public static boolean isPriority(UserRoleEnum role, UserRoleEnum mustRole) {
-        return role.getValue() - mustRole.getValue() <= 0;
-    }
-
-    public String getText() {
-        return text;
+    public static boolean isPriority(RoleEnum roleEnum, RoleEnum mustRoleEnum) {
+        return roleEnum.getValue() - mustRoleEnum.getValue() <= 0;
     }
 
     public String getRole() {

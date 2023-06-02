@@ -4,30 +4,80 @@ create database if not exists chinaoracle;
 -- 切换库
 use chinaoracle;
 
-
--- 用户表（软删除）
-create table if not exists `user`
+-- 角色表
+CREATE TABLE `role`
 (
-    `id`           bigint                                 not null auto_increment comment '用户ID',
-    `email`        varchar(256)                           not null comment '邮箱',
-    `password`     varchar(512)                           not null comment '密码',
-    `union_id`     varchar(256)                           null comment '微信开放平台id',
-    `mp_open_id`   varchar(256)                           null comment '公众号openId',
-    `nick_name`    varchar(256)                           null comment '用户昵称',
-    `user_avatar`  varchar(1024)                          null comment '用户头像',
-    `user_profile` varchar(512)                           null comment '用户简介',
-    `user_role`    varchar(256) default 'user'            not null comment '用户角色: user/admin/ban',
-    `created_at`   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
-    `updated_at`   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '最后更新时间',
-    `is_deleted`   tinyint(1)   default 0                 not null comment '是否已删除(0-未删除 1-已删除)',
-    primary key (`id`),
-    index idx_unionId (union_id)
-) comment '用户表'
+    `id`          int(11)                                NOT NULL AUTO_INCREMENT comment '角色ID',
+    `name`        varchar(50)                            NOT NULL comment '角色名称',
+    `description` varchar(200) DEFAULT NULL comment '角色描述',
+    `status`      tinyint(1)                             NOT NULL DEFAULT '1' comment '角色状态',
+    `created_at`  datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
+    `updated_at`  datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '最后更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_role_name` (`name`)
+) comment '角色表'
     engine = InnoDB
     default charset = utf8mb4
     collate = utf8mb4_unicode_ci;
 
-insert into `user` (`id`, `email`, `password`) value (1, 'ChinaOracle@qq.com', 'ChinaOracle');
+insert into `role`(name, description)
+values ('super_admin', '拥有系统绝对的管理权限'),
+       ('admin', '拥有系统大多数管理权限'),
+       ('user', '仅拥有对自己的管理权限');
+
+-- 权限表
+CREATE TABLE `permission`
+(
+    `id`          int(11)                                NOT NULL AUTO_INCREMENT comment '权限ID',
+    `name`        varchar(50)                            NOT NULL comment '权限名称',
+    `description` varchar(200) DEFAULT NULL comment '权限描述',
+    `created_at`  datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
+    `updated_at`  datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '最后更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_permission_name` (`name`)
+) comment '权限表'
+    engine = InnoDB
+    default charset = utf8mb4
+    collate = utf8mb4_unicode_ci;
+
+-- 角色权限连接表
+CREATE TABLE `role_permission`
+(
+    `id`            int(11) NOT NULL AUTO_INCREMENT,
+    `role_id`       int(11) NOT NULL,
+    `permission_id` int(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_role_permission_role_id` (`role_id`),
+    CONSTRAINT `fk_role_permission_role_id` FOREIGN KEY (`role_id`)
+        REFERENCES `role` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_role_permission_permission_id` FOREIGN KEY (`permission_id`)
+        REFERENCES `permission` (`id`) ON DELETE CASCADE
+) comment '角色权限连接表'
+    engine = InnoDB
+    default charset = utf8mb4
+    collate = utf8mb4_unicode_ci;
+
+
+-- 用户表（软删除）
+create table if not exists `user`
+(
+    `id`         bigint                               not null auto_increment comment '用户ID',
+    `email`      varchar(256)                         not null comment '邮箱',
+    `password`   varchar(256)                         not null comment '密码',
+    `nick_name`  varchar(256)                         null comment '昵称',
+    `avatar`     varchar(1024)                        null comment '头像',
+    `profile`    varchar(512)                         null comment '简介',
+    `role`       int(11)                              not null comment '权限等级, 数值越大权限越大',
+    `is_ban`     tinyint(1) default 0                 not null comment '0-未封禁 1-被封禁',
+    `created_at` datetime   default CURRENT_TIMESTAMP not null comment '创建时间',
+    `updated_at` datetime   default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '最后更新时间',
+    `is_deleted` tinyint(1) default 0                 not null comment '是否已删除(0-未删除 1-已删除)',
+    primary key (`id`),
+    CONSTRAINT `fk_user_role_id` FOREIGN KEY (`role`) REFERENCES `role` (`id`) ON DELETE CASCADE
+) comment '用户表'
+    engine = InnoDB
+    default charset = utf8mb4
+    collate = utf8mb4_unicode_ci;
 
 
 -- 编程语言标签表（软删除）

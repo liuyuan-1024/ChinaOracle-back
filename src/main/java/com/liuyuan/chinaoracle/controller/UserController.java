@@ -18,9 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ServerWebExchange;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -61,12 +61,12 @@ public class UserController {
      * 用户登录
      *
      * @param userLoginRequest 用户登录请求体
-     * @param exchange         代表一次HTTP请求和响应的完整过程的对象
+     * @param request          请求
      * @return 统一响应结果
      */
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,
-                                               ServerWebExchange exchange) {
+                                               HttpServletRequest request) {
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -75,36 +75,36 @@ public class UserController {
         if (StringUtils.isAnyBlank(email, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        LoginUserVO loginUserVO = userService.userLogin(email, password, exchange);
+        LoginUserVO loginUserVO = userService.userLogin(email, password, request);
         return ResultUtils.success(loginUserVO);
     }
 
     /**
      * 用户注销
      *
-     * @param exchange 代表一次HTTP请求和响应的完整过程的对象
+     * @param request 请求
      * @return 统一响应结果
      */
     @PostMapping("/logout")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Boolean> userLogout(ServerWebExchange exchange) {
-        if (exchange == null) {
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+        if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean result = userService.userLogout(exchange);
+        boolean result = userService.userLogout(request);
         return ResultUtils.success(result);
     }
 
     /**
      * 获取当前登录用户
      *
-     * @param exchange 代表一次HTTP请求和响应的完整过程的对象
+     * @param request 请求
      * @return 统一响应结果
      */
     @GetMapping("/get/login")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<LoginUserVO> getLoginUser(ServerWebExchange exchange) {
-        User user = userService.getLoginUser(exchange);
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+        User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
     }
 
@@ -117,17 +117,17 @@ public class UserController {
      * 更新个人信息（用户）
      *
      * @param userUpdateMineRequest 用户更新个人信息请求体
-     * @param exchange              代表一次HTTP请求和响应的完整过程的对象
+     * @param request               请求
      * @return 统一响应结果
      */
     @PostMapping("/update/my")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMineRequest userUpdateMineRequest,
-                                              ServerWebExchange exchange) {
+                                              HttpServletRequest request) {
         if (userUpdateMineRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(exchange);
+        User loginUser = userService.getLoginUser(request);
         User user = new User();
         BeanUtils.copyProperties(userUpdateMineRequest, user);
         user.setId(loginUser.getId());

@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.liuyuan.chinaoracle.common.response.ErrorCode;
 import com.liuyuan.chinaoracle.constant.CommonConstant;
+import com.liuyuan.chinaoracle.constant.UserConstant;
 import com.liuyuan.chinaoracle.exception.BusinessException;
+import com.liuyuan.chinaoracle.mapper.RoleMapper;
 import com.liuyuan.chinaoracle.mapper.UserMapper;
 import com.liuyuan.chinaoracle.model.conversion.UserConvert;
 import com.liuyuan.chinaoracle.model.dto.user.UserQueryRequest;
+import com.liuyuan.chinaoracle.model.entity.Role;
 import com.liuyuan.chinaoracle.model.entity.User;
-import com.liuyuan.chinaoracle.model.enums.UserRoleEnum;
+import com.liuyuan.chinaoracle.model.enums.RoleEnum;
 import com.liuyuan.chinaoracle.model.vo.LoginUserVO;
 import com.liuyuan.chinaoracle.model.vo.UserVO;
 import com.liuyuan.chinaoracle.service.UserService;
@@ -21,9 +24,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.server.ServerWebExchange;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +45,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 盐值，混淆密码
      */
     private static final String SALT = "ChinaOracle";
+
+    @Resource
+    private RoleMapper roleMapper;
 
     @Resource
     private UserMapper userMapper;
@@ -72,10 +78,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+            // 3. 获取默认角色
+            Role defaultRole = roleMapper.selectOneByName(UserConstant.DEFAULT_ROLE);
             // 3. 插入数据
             User user = new User();
             user.setEmail(email);
-            user.setPasswd(encryptPassword);
+            user.setPassword(encryptPassword);
+            user.setRole(defaultRole.getId());
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
@@ -85,7 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public LoginUserVO userLogin(String email, String password, ServerWebExchange exchange) {
+    public LoginUserVO userLogin(String email, String password, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(email, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -101,36 +110,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 查询用户是否存在
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getEmail, email);
-        queryWrapper.eq(User::getPasswd, encryptPassword);
+        queryWrapper.eq(User::getPassword, encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
         // 用户不存在
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 用户被封禁
-        if (this.isProhibitLogin(user)) {
+        if (this.isBan(user.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         // 3. 记录用户的登录态
-        exchange.getAttributes().put(USER_LOGIN_STATE, user);
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
         return this.getLoginUserVO(user);
     }
 
     @Override
-    public boolean userLogout(ServerWebExchange exchange) {
+    public boolean userLogout(HttpServletRequest request) {
         // todo 查看获取的attribute的value是不是null
-        if (exchange.getAttribute(USER_LOGIN_STATE) == null) {
+        if (request.getSession().getAttribute(USER_LOGIN_STATE) == null) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
         }
         // 移除登录态
-        exchange.getAttributes().put(USER_LOGIN_STATE, null);
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
         return true;
     }
 
     @Override
-    public User getLoginUser(ServerWebExchange exchange) {
+    public User getLoginUser(HttpServletRequest request) {
         // 先判断是否已登录
-        Object userObj = exchange.getAttribute(USER_LOGIN_STATE);
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
@@ -147,12 +156,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 获取当前登录用户（允许未登录）
      *
-     * @param exchange 代表一次HTTP请求和响应的完整过程的对象
+     * @param request 请求
      */
     @Override
-    public User getLoginUserPermitNull(ServerWebExchange exchange) {
+    public User getLoginUserPermitNull(HttpServletRequest request) {
         // 先判断是否已登录
-        Object userObj = exchange.getAttribute(USER_LOGIN_STATE);
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             return null;
@@ -162,27 +171,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public UserRoleEnum getUserRole(User user) {
-        // todo 如何获取用户的角色
-        return null;
+    public Role getUserRole(Long userId) {
+        User user = userMapper.selectById(userId);
+        return roleMapper.selectById(user.getRole());
     }
 
     @Override
-    public boolean isAdmin(User user) {
-        return user != null;
+    public boolean isSuperAdmin(Long userId) {
+        Role role = this.getUserRole(userId);
+        return RoleEnum.SUPER_ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isSuperAdmin(User user) {
-        Integer isAdmin = userMapper.selectById(user.getId()).getIsAdmin();
-        return isAdmin == 1;
+    public boolean isAdmin(Long userId) {
+        Role role = this.getUserRole(userId);
+        return RoleEnum.ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isProhibitLogin(User user) {
-        return !ObjectUtils.isEmpty(user) && user.getProhibitLogin() == 0;
+    public boolean isBan(Long userId) {
+        User user = userMapper.selectById(userId);
+        return UserConstant.BAN.equals(user.getIsBan());
     }
-
 
     @Override
     public LoginUserVO getLoginUserVO(User user) {
@@ -209,22 +219,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         Long id = userQueryRequest.getId();
-        String nickName = userQueryRequest.getFullName();
-        String description = userQueryRequest.getDescription();
+        String nickName = userQueryRequest.getNickName();
+        String profile = userQueryRequest.getProfile();
         String sortField = userQueryRequest.getSortField();
         boolean isAsc = userQueryRequest.getSortOrder().equals(CommonConstant.SORT_ORDER_ASC);
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(id != null, User::getId, id);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(description), User::getDescription,
-            description);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(nickName), User::getFullName, nickName);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(profile), User::getProfile, profile);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(nickName), User::getNickName, nickName);
         queryWrapper.orderBy(SqlUtils.verifySortField(sortField), isAsc, sortField);
 
         return queryWrapper;
     }
 }
-
-
-
-

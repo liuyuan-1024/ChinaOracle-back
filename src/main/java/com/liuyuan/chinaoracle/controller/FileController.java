@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ServerWebExchange;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.Arrays;
 
@@ -43,13 +43,13 @@ public class FileController {
      *
      * @param multipartFile     文件
      * @param uploadFileRequest 文件上传请求体
-     * @param exchange          代表一次HTTP请求和响应的完整过程的对象
+     * @param request           请求
      * @return 可访问地址
      */
     @PostMapping("/upload")
     public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile multipartFile,
                                            UploadFileRequest uploadFileRequest,
-                                           ServerWebExchange exchange) {
+                                           HttpServletRequest request) {
         String biz = uploadFileRequest.getBiz();
         FileUploadBizEnum fileUploadBizEnum = FileUploadBizEnum.getEnumByValue(biz);
         if (fileUploadBizEnum == null) {
@@ -58,7 +58,7 @@ public class FileController {
         // 校验文件
         fileUploadBizEnum.verifyFile(multipartFile, fileUploadBizEnum);
         this.verifyFile(multipartFile, fileUploadBizEnum);
-        User loginUser = userService.getLoginUser(exchange);
+        User loginUser = userService.getLoginUser(request);
         // 文件目录：根据业务、用户来划分
         String uuid = RandomStringUtils.randomAlphanumeric(8);
         String filename = uuid + "-" + multipartFile.getOriginalFilename();

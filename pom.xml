@@ -23,10 +23,10 @@
     </properties>
     <dependencies>
 
-        <!-- ========================================== start 项目基本依赖 ========================================== -->
+        <!-- ================================ start 项目基本依赖 ================================ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,6 +53,11 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.5.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.2.18</version>
         </dependency>
 
         <!-- redis -->
@@ -103,10 +108,10 @@
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>3.0.3</version>
         </dependency>
-        <!-- =========================================== end 项目基本依赖 =========================================== -->
+        <!-- ================================ end 项目基本依赖 ================================== -->
 
 
-        <!-- ========================================== start 项目特有依赖 ========================================== -->
+        <!-- ================================ start 项目特有依赖 ================================ -->
         <!-- JGit -->
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -125,10 +130,10 @@
             <artifactId>easyexcel</artifactId>
             <version>3.3.1</version>
         </dependency>
-        <!-- =========================================== end 项目特有依赖 =========================================== -->
+        <!-- ================================= end 项目特有依赖 ================================= -->
 
 
-        <!-- ========================================== start 项目开发依赖 ========================================== -->
+        <!-- ================================ start 项目开发依赖 ================================ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -140,7 +145,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- =========================================== end 项目基本依赖 =========================================== -->
+        <!-- ================================= end 项目开发依赖 ================================= -->
     </dependencies>
 
     <build>

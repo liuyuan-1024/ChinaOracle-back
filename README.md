@@ -5,7 +5,7 @@
 ### 主流框架 & 特性
 
 - Spring Boot 2.7.6
-- Spring WebFlux(非阻塞式HTTP请求框架, 与druid不兼容)
+- Spring MVC
 - MyBatis + MyBatis Plus 数据访问（开启分页）
 - Spring Boot 调试工具和项目处理器
 - Spring AOP 切面编程
@@ -16,6 +16,7 @@
 ### 数据存储
 
 - MySQL 数据库
+- Druid连接池
 - Redis 内存数据库
 - 腾讯云 COS 对象存储
 
@@ -87,16 +88,15 @@ spring:
     store-type: redis
 ```
 
+### 权限校验设计
+
+可以看数据库表设计，具体考虑如何实现，现在先简单使用role表来实现。后期考虑改进。
+现在的权限校验逻辑：对比用户的role的name值是否与RoleEnum中的role值相等。各个角色的权限是是写死在代码中的。
+
 ### 问题
 
 #### mapstruct复制对象为null
 
 - 原因：因为lombok的依赖在mapstruct依赖后才引入
 
-- 解决：在mapstruct依赖之前引入lombok依赖就好了
-
-### 项目启动报错：druid相关的错误
-
-- 原因：druid与WebFlux冲突
-
-- 解决：移除druid依赖
+- 解决：在mapstruct依赖之前引入lombok依赖就好了、

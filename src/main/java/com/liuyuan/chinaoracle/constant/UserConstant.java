@@ -10,7 +10,17 @@ public interface UserConstant {
      */
     String USER_LOGIN_STATE = "user_login";
 
-    //  region 权限
+    //  region 角色 与role表中的name字段的值保持一致
+
+    /**
+     * 超级管理员
+     */
+    String SUPER_ADMIN_ROLE = "super_admin";
+
+    /**
+     * 管理员
+     */
+    String ADMIN_ROLE = "admin";
 
     /**
      * 默认角色
@@ -18,12 +28,7 @@ public interface UserConstant {
     String DEFAULT_ROLE = "user";
 
     /**
-     * 管理员角色
+     * 封禁
      */
-    String ADMIN_ROLE = "admin";
-
-    /**
-     * 仓库管理员
-     */
-    String SUPER_ADMIN_ROLE = "super_admin";
+    Integer BAN = 1;
 }

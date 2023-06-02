@@ -3,12 +3,12 @@ package com.liuyuan.chinaoracle.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.liuyuan.chinaoracle.model.dto.user.UserQueryRequest;
+import com.liuyuan.chinaoracle.model.entity.Role;
 import com.liuyuan.chinaoracle.model.entity.User;
-import com.liuyuan.chinaoracle.model.enums.UserRoleEnum;
 import com.liuyuan.chinaoracle.model.vo.LoginUserVO;
 import com.liuyuan.chinaoracle.model.vo.UserVO;
-import org.springframework.web.server.ServerWebExchange;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,62 +32,61 @@ public interface UserService extends IService<User> {
      *
      * @param email    用户邮箱
      * @param password 用户密码
-     * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
-     *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
+     * @param request  请求
      */
-    LoginUserVO userLogin(String email, String password, ServerWebExchange exchange);
+    LoginUserVO userLogin(String email, String password, HttpServletRequest request);
 
     /**
      * 用户注销
      *
-     * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
-     *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
+     * @param request 请求
      */
-    boolean userLogout(ServerWebExchange exchange);
+    boolean userLogout(HttpServletRequest request);
 
     /**
      * 获取当前登录用户
      *
-     * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
-     *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
+     * @param request 请求
      */
-    User getLoginUser(ServerWebExchange exchange);
+    User getLoginUser(HttpServletRequest request);
 
     /**
      * 获取当前登录用户（允许未登录）
      *
-     * @param exchange WebFlux框架中的一个核心接口, 代表了一个客户端与服务器之间的交互
-     *                 (即一次HTTP请求和响应的完整过程),并提供了一系列方法来对请求和响应进行处理。
+     * @param request 请求
      */
-    User getLoginUserPermitNull(ServerWebExchange exchange);
+    User getLoginUserPermitNull(HttpServletRequest request);
 
     /**
      * 获取用户权限的枚举对象
      *
-     * @param user 用户
+     * @param userId 用户ID
      */
-    UserRoleEnum getUserRole(User user);
+    Role getUserRole(Long userId);
 
-    /**
-     * 是否为管理员
-     *
-     * @param user 用户
-     */
-    boolean isAdmin(User user);
 
     /**
      * 是否为超级管理员
      *
-     * @param user 用户
+     * @param userId 用户ID
      */
-    boolean isSuperAdmin(User user);
+    boolean isSuperAdmin(Long userId);
+
+
+    /**
+     * 是否为管理员
+     *
+     * @param userId 用户ID
+     */
+    boolean isAdmin(Long userId);
+
 
     /**
      * 是否被封禁
      *
-     * @param user 用户
+     * @param userId 用户ID
      */
-    boolean isProhibitLogin(User user);
+    boolean isBan(Long userId);
 
     /**
      * 获取脱敏的已登录用户信息
