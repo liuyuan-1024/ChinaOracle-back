@@ -23,11 +23,6 @@ public class LoginUserVO implements Serializable {
     private String email;
 
     /**
-     * 密码
-     */
-    private String password;
-
-    /**
      * 昵称
      */
     private String nickName;
@@ -41,5 +36,10 @@ public class LoginUserVO implements Serializable {
      * 简介
      */
     private String profile;
+
+    /**
+     * 密钥、令牌
+     */
+    private String token;
 
 }
