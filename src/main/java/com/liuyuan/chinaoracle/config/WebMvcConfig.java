@@ -1,13 +1,13 @@
 package com.liuyuan.chinaoracle.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * @Author: BugOS-ly
- * @Date: 2023/6/3 00:03
- * @Description:
+ * web配置类
  */
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
