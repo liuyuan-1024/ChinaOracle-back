@@ -61,11 +61,13 @@ public enum FileUploadBizEnum {
      * @param fileUploadBizEnum 文件上传枚举
      * @return 符合(true) 不符合(false)
      */
-    public void verifyFile(MultipartFile file, FileUploadBizEnum fileUploadBizEnum) {
+    public void verifyFile(MultipartFile file,
+                           FileUploadBizEnum fileUploadBizEnum) {
         // 1.校验文件大小
         if (file.getSize() > fileUploadBizEnum.maxSize) {
             long max = fileUploadBizEnum.maxSize / 2 ^ 20;
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小不能超过" + max + "MB");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,
+                "文件大小不能超过" + max + "MB");
         }
 
         // 2.校验上传文件的业务类型

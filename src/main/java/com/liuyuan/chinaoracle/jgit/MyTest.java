@@ -14,7 +14,8 @@ import java.io.IOException;
 public class MyTest {
 
     public static void main(String[] args) throws IOException {
-        Repository repository = FileRepositoryBuilder.create(new File("/temp/my_repo/.git"));
+        Repository repository = FileRepositoryBuilder.create(new File("/temp" +
+            "/my_repo/.git"));
         new FileRepositoryBuilder().setGitDir(new File("my_repo/.git")).build();
     }
 }

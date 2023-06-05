@@ -34,7 +34,8 @@ public interface UserService extends IService<User> {
      * @param password 用户密码
      * @param request  请求
      */
-    LoginUserVO userLogin(String email, String password, HttpServletRequest request);
+    LoginUserVO userLogin(String email, String password,
+                          HttpServletRequest request);
 
     /**
      * 用户注销

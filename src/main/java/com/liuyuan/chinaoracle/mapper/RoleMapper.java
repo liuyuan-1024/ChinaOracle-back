@@ -12,6 +12,12 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface RoleMapper extends BaseMapper<Role> {
 
+    /**
+     * 依据name属性查询一个角色.
+     *
+     * @param name 名称
+     * @return Role对象
+     */
     Role selectOneByName(@Param("name") String name);
 
 }

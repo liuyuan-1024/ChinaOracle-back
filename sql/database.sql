@@ -118,7 +118,8 @@ create table if not exists `license`
     collate = utf8mb4_unicode_ci;
 
 insert into `license` (`id`, `name`, `url`, `description`)
-    value (1, 'GPL', 'https://www.gnu.org/licenses/gpl-3.0.txt', '默认开源许可证');
+    value (1, 'GPL', 'https://www.gnu.org/licenses/gpl-3.0.txt',
+           '默认开源许可证');
 
 
 -- 代码仓库表（软删除）

@@ -12,7 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * Knife4j 接口文档配置
+ * Knife4j 接口文档配置.
  * https://doc.xiaominfo.com/knife4j/documentation/get_start.html
  */
 @Configuration
@@ -20,8 +20,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Profile({"dev", "test"})
 public class Knife4jConfig {
 
+    /**
+     * 配置Knife4j接口文档.
+     *
+     * @return Docket对象
+     */
     @Bean
-    public Docket defaultApi2() {
+    public Docket defaultApi() {
 
         ApiInfo apiInfo = new ApiInfoBuilder()
             .title("接口文档")
@@ -33,9 +38,9 @@ public class Knife4jConfig {
             .apiInfo(apiInfo)
             .select()
             // 指定 Controller 扫描包路径
-            .apis(RequestHandlerSelectors.basePackage("com.liuyuan.chinaoracle.controller"))
+            .apis(RequestHandlerSelectors
+                .basePackage("com.liuyuan.chinaoracle.controller"))
             .paths(PathSelectors.any())
             .build();
     }
-
 }

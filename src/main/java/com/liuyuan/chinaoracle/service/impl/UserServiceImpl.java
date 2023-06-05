@@ -40,9 +40,10 @@ import static com.liuyuan.chinaoracle.constant.UserConstant.USER_LOGIN_STATE;
  */
 @Service
 @Slf4j
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User>
+    implements UserService {
     /**
-     * 盐值，混淆密码
+     * 盐值，混淆密码.
      */
     private static final String SALT = "ChinaOracle";
 
@@ -53,7 +54,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserMapper userMapper;
 
     @Override
-    public long userRegister(String email, String password, String checkPassword) {
+    public long userRegister(final String email, final String password,
+                             final String checkPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(email, password, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -77,9 +79,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
             }
             // 2. 加密
-            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+            String encryptPassword =
+                DigestUtils.md5DigestAsHex((SALT + password).getBytes());
             // 3. 获取默认角色
-            Role defaultRole = roleMapper.selectOneByName(UserConstant.DEFAULT_ROLE);
+            Role defaultRole =
+                roleMapper.selectOneByName(UserConstant.DEFAULT_ROLE);
             // 3. 插入数据
             User user = new User();
             user.setEmail(email);
@@ -87,14 +91,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setRole(defaultRole.getId());
             boolean saveResult = this.save(user);
             if (!saveResult) {
-                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR,
+                    "注册失败，数据库错误");
             }
             return user.getId();
         }
     }
 
     @Override
-    public LoginUserVO userLogin(String email, String password, HttpServletRequest request) {
+    public LoginUserVO userLogin(final String email, final String password,
+                                 HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(email, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -106,7 +112,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码错误");
         }
         // 2. 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+        String encryptPassword =
+            DigestUtils.md5DigestAsHex((SALT + password).getBytes());
         // 查询用户是否存在
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getEmail, email);
@@ -125,6 +132,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return this.getLoginUserVO(user);
     }
 
+    /**
+     * 用户注销登录.
+     *
+     * @param request 请求
+     * @return 是否注销成功
+     */
     @Override
     public boolean userLogout(HttpServletRequest request) {
         // 查看用户登录态，判断用户是否已登录
@@ -136,6 +149,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return true;
     }
 
+    /**
+     * 获取当前登录用户.
+     *
+     * @param request 请求
+     * @return 返回当前登录用户
+     */
     @Override
     public User getLoginUser(HttpServletRequest request) {
         // 先判断是否已登录
@@ -154,7 +173,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 获取当前登录用户（允许未登录）
+     * 获取当前登录用户（允许未登录）.
      *
      * @param request 请求
      */
@@ -196,12 +215,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public LoginUserVO getLoginUserVO(User user) {
-        return ObjectUtils.isEmpty(user) ? null : UserConvert.INSTANCE.toLoginUserVo(user);
+        return ObjectUtils.isEmpty(user) ? null :
+            UserConvert.INSTANCE.toLoginUserVo(user);
     }
 
     @Override
     public UserVO getUserVO(User user) {
-        return ObjectUtils.isEmpty(user) ? null : UserConvert.INSTANCE.toUserVo(user);
+        return ObjectUtils.isEmpty(user) ? null :
+            UserConvert.INSTANCE.toUserVo(user);
     }
 
     @Override
@@ -222,13 +243,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String nickName = userQueryRequest.getNickName();
         String profile = userQueryRequest.getProfile();
         String sortField = userQueryRequest.getSortField();
-        boolean isAsc = userQueryRequest.getSortOrder().equals(CommonConstant.SORT_ORDER_ASC);
+        boolean isAsc =
+            userQueryRequest.getSortOrder().equals(CommonConstant.SORT_ORDER_ASC);
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(id != null, User::getId, id);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(profile), User::getProfile, profile);
-        queryWrapper.lambda().like(StringUtils.isNotBlank(nickName), User::getNickName, nickName);
-        queryWrapper.orderBy(SqlUtils.verifySortField(sortField), isAsc, sortField);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(profile),
+            User::getProfile, profile);
+        queryWrapper.lambda().like(StringUtils.isNotBlank(nickName),
+            User::getNickName, nickName);
+        queryWrapper.orderBy(SqlUtils.verifySortField(sortField), isAsc,
+            sortField);
 
         return queryWrapper;
     }

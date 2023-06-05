@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 腾讯云对象存储客户端
+ * 腾讯云对象存储客户端.
  */
 @Configuration
 @ConfigurationProperties(prefix = "cos.client")
@@ -19,30 +19,36 @@ import org.springframework.context.annotation.Configuration;
 public class CosClientConfig {
 
     /**
-     * accessKey
+     * accessKey.
      */
     private String accessKey;
 
     /**
-     * secretKey
+     * secretKey.
      */
     private String secretKey;
 
     /**
-     * 区域
+     * 区域.
      */
     private String region;
 
     /**
-     * 桶名
+     * 桶名.
      */
     private String bucket;
 
+    /**
+     * 管理cos客户端的bean.
+     *
+     * @return 返回 COSClient对象
+     */
     @Bean
     public COSClient cosClient() {
         // 初始化用户身份信息(secretId, secretKey)
         COSCredentials cred = new BasicCOSCredentials(accessKey, secretKey);
-        // 设置bucket的区域, COS地域的简称请参照 https://www.qcloud.com/document/product/436/6224
+        // 设置bucket的区域
+        // COS地域的简称请参照 https://www.qcloud.com/document/product/436/6224
         ClientConfig clientConfig = new ClientConfig(new Region(region));
         // 生成cos客户端
         return new COSClient(cred, clientConfig);

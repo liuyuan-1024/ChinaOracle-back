@@ -24,26 +24,31 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 用户接口
+ * 用户接口.
  */
 @RestController
 @RequestMapping("/user")
 @Slf4j
 public class UserController {
 
+    /**
+     * 用户服务接口.
+     */
     @Resource
     private UserService userService;
 
     // region 登录相关
 
     /**
-     * 用户注册
+     * 用户注册.
      *
      * @param userRegisterRequest 用户注册请求体
      * @return 统一响应结果
      */
     @PostMapping("/register")
-    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public BaseResponse<Long> userRegister(
+        @RequestBody final UserRegisterRequest userRegisterRequest) {
+
         if (userRegisterRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -58,15 +63,17 @@ public class UserController {
     }
 
     /**
-     * 用户登录
+     * 用户登录.
      *
      * @param userLoginRequest 用户登录请求体
      * @param request          请求
      * @return 统一响应结果
      */
     @PostMapping("/login")
-    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,
-                                               HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> userLogin(
+        @RequestBody final UserLoginRequest userLoginRequest,
+        final HttpServletRequest request) {
+
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -75,19 +82,20 @@ public class UserController {
         if (StringUtils.isAnyBlank(email, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        LoginUserVO loginUserVO = userService.userLogin(email, password, request);
+        LoginUserVO loginUserVO = userService.userLogin(email, password,
+            request);
         return ResultUtils.success(loginUserVO);
     }
 
     /**
-     * 用户注销
+     * 用户注销.
      *
      * @param request 请求
      * @return 统一响应结果
      */
     @PostMapping("/logout")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+    public BaseResponse<Boolean> userLogout(final HttpServletRequest request) {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -96,14 +104,16 @@ public class UserController {
     }
 
     /**
-     * 获取当前登录用户
+     * 获取当前登录用户.
      *
      * @param request 请求
      * @return 统一响应结果
      */
     @GetMapping("/get/login")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> getLoginUser(
+        final HttpServletRequest request) {
+
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
     }
@@ -114,7 +124,7 @@ public class UserController {
     // region 用户信息相关(user权限)
 
     /**
-     * 更新个人信息（用户）
+     * 更新个人信息（用户）.
      *
      * @param userUpdateMineRequest 用户更新个人信息请求体
      * @param request               请求
@@ -122,8 +132,10 @@ public class UserController {
      */
     @PostMapping("/update/my")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMineRequest userUpdateMineRequest,
-                                              HttpServletRequest request) {
+    public BaseResponse<Boolean> updateMyUser(
+        @RequestBody final UserUpdateMineRequest userUpdateMineRequest,
+        final HttpServletRequest request
+    ) {
         if (userUpdateMineRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -137,28 +149,30 @@ public class UserController {
     }
 
     /**
-     * 根据 id 获取用户包装类
+     * 根据 id 获取用户包装类.
      *
      * @param id 用户ID
      * @return 统一响应结果
      */
     @GetMapping("/get/vo")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<UserVO> getUserVOById(long id) {
+    public BaseResponse<UserVO> getUserVOById(final long id) {
         BaseResponse<User> response = getUserById(id);
         User user = response.getData();
         return ResultUtils.success(userService.getUserVO(user));
     }
 
     /**
-     * 分页获取用户封装列表
+     * 分页获取用户封装列表.
      *
      * @param userQueryRequest 用户查询请求体
      * @return 统一响应结果
      */
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
+    public BaseResponse<Page<UserVO>> listUserVOByPage(
+        @RequestBody final UserQueryRequest userQueryRequest) {
+
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -168,7 +182,8 @@ public class UserController {
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<User> userPage = userService.page(new Page<>(current, size),
             userService.getQueryWrapper(userQueryRequest));
-        Page<UserVO> userVOPage = new Page<>(current, size, userPage.getTotal());
+        Page<UserVO> userVOPage = new Page<>(current, size,
+            userPage.getTotal());
         List<UserVO> userVO = userService.getUserVO(userPage.getRecords());
         userVOPage.setRecords(userVO);
         return ResultUtils.success(userVOPage);
@@ -180,14 +195,16 @@ public class UserController {
     // region 增删改查(admin权限)
 
     /**
-     * 删除用户（仅管理员）
+     * 删除用户（仅管理员）.
      *
      * @param deleteRequest 删除请求体
      * @return 统一响应结果
      */
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
+    public BaseResponse<Boolean> deleteUser(
+        @RequestBody final DeleteRequest deleteRequest) {
+
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -196,14 +213,16 @@ public class UserController {
     }
 
     /**
-     * 更新用户（仅管理员）
+     * 更新用户（仅管理员）.
      *
      * @param userUpdateRequest 用户更新请求体
      * @return 统一响应结果
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
+    public BaseResponse<Boolean> updateUser(
+        @RequestBody final UserUpdateRequest userUpdateRequest) {
+
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -215,14 +234,14 @@ public class UserController {
     }
 
     /**
-     * 根据 id 获取用户（仅管理员）
+     * 根据 id 获取用户（仅管理员）.
      *
      * @param id 用户ID
      * @return 统一响应结果
      */
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<User> getUserById(long id) {
+    public BaseResponse<User> getUserById(final long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -232,14 +251,16 @@ public class UserController {
     }
 
     /**
-     * 分页获取用户列表（仅管理员）
+     * 分页获取用户列表（仅管理员）.
      *
      * @param userQueryRequest 用户查询请求体
      * @return 统一响应结果
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest) {
+    public BaseResponse<Page<User>> listUserByPage(
+        @RequestBody final UserQueryRequest userQueryRequest) {
+
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size),

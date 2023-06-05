@@ -7,7 +7,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * 主类（项目启动入口）
+ * 主类（项目启动入口）.
  */
 @SpringBootApplication
 @EnableScheduling
@@ -15,7 +15,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class Application {
 
-    public static void main(String[] args) {
+    /**
+     * application的入口.
+     *
+     * @param args 默认参数
+     */
+    public static void main(final String[] args) {
         SpringApplication.run(Application.class, args);
     }
 

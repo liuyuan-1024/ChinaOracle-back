@@ -34,7 +34,8 @@ public class LogInterceptor {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         // 获取请求路径
-        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+        RequestAttributes requestAttributes =
+            RequestContextHolder.currentRequestAttributes();
         HttpServletRequest httpServletRequest =
             ((ServletRequestAttributes) requestAttributes).getRequest();
         // 生成请求唯一 id
@@ -44,7 +45,8 @@ public class LogInterceptor {
         Object[] args = point.getArgs();
         String reqParam = "[" + StringUtils.join(args, ", ") + "]";
         // 输出请求日志
-        log.info("request start，id: {}, path: {}, ip: {}, params: {}", requestId, url,
+        log.info("request start，id: {}, path: {}, ip: {}, params: {}",
+            requestId, url,
             httpServletRequest.getRemoteHost(), reqParam);
         // 执行原方法
         Object result = point.proceed();
