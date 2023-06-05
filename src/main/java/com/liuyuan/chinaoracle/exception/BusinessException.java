@@ -12,21 +12,43 @@ public class BusinessException extends RuntimeException {
      */
     private final int code;
 
+    /**
+     * 构造业务异常.
+     *
+     * @param code    状态码
+     * @param message 信息
+     */
     public BusinessException(final int code, final String message) {
         super(message);
         this.code = code;
     }
 
+    /**
+     * 构造业务异常.
+     *
+     * @param errorCode 自定义错误码
+     */
     public BusinessException(final ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.code = errorCode.getCode();
     }
 
+    /**
+     * 构造业务异常.
+     *
+     * @param errorCode 自定义错误码
+     * @param message   信息
+     */
     public BusinessException(final ErrorCode errorCode, final String message) {
         super(message);
         this.code = errorCode.getCode();
     }
 
+    /**
+     * 获取业务异常的状态码.
+     *
+     * @return 状态码
+     */
     public int getCode() {
         return code;
     }

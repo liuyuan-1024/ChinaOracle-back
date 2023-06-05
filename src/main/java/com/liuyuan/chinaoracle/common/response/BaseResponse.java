@@ -40,7 +40,13 @@ public class BaseResponse<T> implements Serializable {
         this.message = message;
     }
 
-    public BaseResponse(int code, T data) {
+    /**
+     * 构造统一响应结果.
+     *
+     * @param code 状态码
+     * @param data 数据
+     */
+    public BaseResponse(final int code, final T data) {
         this(code, data, "");
     }
 
