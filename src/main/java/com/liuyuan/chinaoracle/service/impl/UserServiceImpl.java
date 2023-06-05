@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 import static com.liuyuan.chinaoracle.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
- * @author 源
+ * @author liuyuan-1024
  * @description 针对表【user(用户表)】的数据库操作Service实现
  * @createDate 2023-05-06 02:58:49
  */
@@ -47,9 +47,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     private static final String SALT = "ChinaOracle";
 
+    /**
+     * 角色mapper.
+     */
     @Resource
     private RoleMapper roleMapper;
 
+    /**
+     * 用户mapper.
+     */
     @Resource
     private UserMapper userMapper;
 
@@ -100,7 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public LoginUserVO userLogin(final String email, final String password,
-                                 HttpServletRequest request) {
+                                 final HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(email, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -132,14 +138,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return this.getLoginUserVO(user);
     }
 
-    /**
-     * 用户注销登录.
-     *
-     * @param request 请求
-     * @return 是否注销成功
-     */
     @Override
-    public boolean userLogout(HttpServletRequest request) {
+    public boolean userLogout(final HttpServletRequest request) {
         // 查看用户登录态，判断用户是否已登录
         if (request.getSession().getAttribute(USER_LOGIN_STATE) == null) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
@@ -149,14 +149,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return true;
     }
 
-    /**
-     * 获取当前登录用户.
-     *
-     * @param request 请求
-     * @return 返回当前登录用户
-     */
     @Override
-    public User getLoginUser(HttpServletRequest request) {
+    public User getLoginUser(final HttpServletRequest request) {
         // 先判断是否已登录
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
@@ -172,13 +166,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return currentUser;
     }
 
-    /**
-     * 获取当前登录用户（允许未登录）.
-     *
-     * @param request 请求
-     */
+
     @Override
-    public User getLoginUserPermitNull(HttpServletRequest request) {
+    public User getLoginUserPermitNull(final HttpServletRequest request) {
         // 先判断是否已登录
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
@@ -189,34 +179,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return this.getById(currentUser.getId());
     }
 
+
     @Override
-    public Role getUserRole(Long userId) {
+    public Role getUserRole(final Long userId) {
         User user = userMapper.selectById(userId);
         return roleMapper.selectById(user.getRole());
     }
 
+
     @Override
-    public boolean isSuperAdmin(Long userId) {
+    public boolean isSuperAdmin(final Long userId) {
         Role role = this.getUserRole(userId);
         return RoleEnum.SUPER_ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isAdmin(Long userId) {
+    public boolean isAdmin(final Long userId) {
         Role role = this.getUserRole(userId);
         return RoleEnum.ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isBan(Long userId) {
+    public boolean isBan(final Long userId) {
         User user = userMapper.selectById(userId);
         return UserConstant.BAN.equals(user.getIsBan());
     }
 
     @Override
-    public LoginUserVO getLoginUserVO(User user) {
-        return ObjectUtils.isEmpty(user) ? null :
-            UserConvert.INSTANCE.toLoginUserVo(user);
+    public LoginUserVO getLoginUserVO(final User user) {
+        return ObjectUtils.isEmpty(user) ? null
+            : UserConvert.INSTANCE.toLoginUserVo(user);
     }
 
     @Override

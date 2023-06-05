@@ -62,6 +62,7 @@ public enum FileUploadBizEnum {
     /**
      * 根据 value 获取枚举.
      *
+     * @param value 枚举value
      * @return 文件上传枚举
      */
     public static FileUploadBizEnum getEnumByValue(final String value) {
@@ -106,12 +107,14 @@ public enum FileUploadBizEnum {
 
     /**
      * 校验头像.
+     *
+     * @param avatar 头像文件
      */
     private void verifyAvatar(final MultipartFile avatar) {
 
         String suffix = FileUtil.getSuffix(avatar.getOriginalFilename());
 
-        if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp").contains(suffix)) {
+        if (!Arrays.asList("jpg", "svg", "png", "webp").contains(suffix)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件类型错误");
         }
     }
