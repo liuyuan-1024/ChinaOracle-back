@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 /**
- * 请求响应日志 AOP
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * 请求响应日志 AOP.
  **/
 @Aspect
 @Component
@@ -26,10 +23,15 @@ import java.util.UUID;
 public class LogInterceptor {
 
     /**
-     * 执行拦截
+     * 执行拦截.
+     *
+     * @param point 切点
+     * @return 连接点执行后的返回结果
      */
     @Around("execution(* com.liuyuan.chinaoracle.controller.*.*(..))")
-    public Object doInterceptor(ProceedingJoinPoint point) throws Throwable {
+    public Object doInterceptor(final ProceedingJoinPoint point)
+        throws Throwable {
+
         // 计时
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

@@ -6,17 +6,20 @@ import org.springframework.http.server.ServerHttpRequest;
 import java.net.InetAddress;
 
 /**
- * 网络工具类
+ * 网络工具类.
  */
-public class NetUtils {
+public final class NetUtils {
+
+    private NetUtils() {
+    }
 
     /**
-     * 获取客户端 IP 地址
+     * 获取客户端 IP 地址.
      *
-     * @param request
-     * @return
+     * @param request 网络请求
+     * @return 响应字符串
      */
-    public static String getIpAddress(ServerHttpRequest request) {
+    public static String getIpAddress(final ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
 
         String ip = headers.getFirst("x-forwarded-for");
