@@ -220,13 +220,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public UserVO getUserVO(User user) {
-        return ObjectUtils.isEmpty(user) ? null :
-            UserConvert.INSTANCE.toUserVo(user);
+    public UserVO getUserVO(final User user) {
+        return ObjectUtils.isEmpty(user) ? null
+            : UserConvert.INSTANCE.toUserVo(user);
     }
 
     @Override
-    public List<UserVO> getUserVO(List<User> userList) {
+    public List<UserVO> getUserVO(final List<User> userList) {
         if (CollectionUtils.isEmpty(userList)) {
             return new ArrayList<>();
         }
@@ -234,7 +234,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest) {
+    public QueryWrapper<User> getQueryWrapper(final UserQueryRequest
+                                                  userQueryRequest) {
+
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
         }
@@ -243,8 +245,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String nickName = userQueryRequest.getNickName();
         String profile = userQueryRequest.getProfile();
         String sortField = userQueryRequest.getSortField();
-        boolean isAsc =
-            userQueryRequest.getSortOrder().equals(CommonConstant.SORT_ORDER_ASC);
+        boolean isAsc = userQueryRequest.getSortOrder()
+            .equals(CommonConstant.SORT_ORDER_ASC);
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(id != null, User::getId, id);
