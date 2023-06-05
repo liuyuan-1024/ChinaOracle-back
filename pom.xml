@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
     <groupId>com.liuyan</groupId>
-    <artifactId>chinaoracle</artifactId>
+    <artifactId>ChinaOracle-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>chinaoracle-back</name>
     <properties>
