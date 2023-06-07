@@ -24,10 +24,10 @@ spring:
   devtools:
     restart:
       enabled: true
-# 服务器相关  626359-9376 => namely-zero
+# 服务器相关  24462 672253 => china oracle ==> 6267
 server:
   address: 0.0.0.0
-  port: 9376
+  port: 6267
   servlet:
     # 可全局设置上下文路径
     context-path:
