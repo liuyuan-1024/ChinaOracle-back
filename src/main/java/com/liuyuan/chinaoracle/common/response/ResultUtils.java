@@ -17,7 +17,7 @@ public final class ResultUtils {
      * @param data 待返回的数据
      * @return 统一响应类对象
      */
-    public static <T> BaseResponse<T> success(final T data) {
+    public static <T> BaseResponse<T> success(T data) {
         return new BaseResponse<>(ErrorCode.SUCCESS.getCode(), data,
             ErrorCode.SUCCESS.getMessage());
     }
@@ -28,7 +28,7 @@ public final class ResultUtils {
      * @param errorCode 失败码
      * @return 统一响应类对象
      */
-    public static BaseResponse<Null> error(final ErrorCode errorCode) {
+    public static BaseResponse<Null> error(ErrorCode errorCode) {
         return new BaseResponse<>(errorCode);
     }
 
@@ -39,8 +39,8 @@ public final class ResultUtils {
      * @param message   自定义消息
      * @return 统一响应类对象
      */
-    public static BaseResponse<Null> error(final ErrorCode errorCode,
-                                           final String message) {
+    public static BaseResponse<Null> error(ErrorCode errorCode,
+                                           String message) {
         return new BaseResponse<>(errorCode.getCode(), null, message);
     }
 
@@ -52,8 +52,8 @@ public final class ResultUtils {
      * @param message 自定义消息
      * @return 统一响应类对象
      */
-    public static BaseResponse<Null> error(final int code,
-                                           final String message) {
+    public static BaseResponse<Null> error(int code,
+                                           String message) {
         return new BaseResponse<>(code, null, message);
     }
 }

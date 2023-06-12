@@ -20,7 +20,7 @@ public class Application {
      *
      * @param args 默认参数
      */
-    public static void main(final String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 

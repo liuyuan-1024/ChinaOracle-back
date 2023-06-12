@@ -29,7 +29,7 @@ public class LogInterceptor {
      * @return 连接点执行后的返回结果
      */
     @Around("execution(* com.liuyuan.chinaoracle.controller.*.*(..))")
-    public Object doInterceptor(final ProceedingJoinPoint point)
+    public Object doInterceptor(ProceedingJoinPoint point)
         throws Throwable {
 
         // 计时

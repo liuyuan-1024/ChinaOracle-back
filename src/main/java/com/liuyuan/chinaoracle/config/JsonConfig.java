@@ -19,7 +19,7 @@ public class JsonConfig {
      * @return ObjectMapper
      */
     @Bean
-    public ObjectMapper jacksonObjectMapper(final Jackson2ObjectMapperBuilder
+    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder
                                                 builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         SimpleModule module = new SimpleModule();

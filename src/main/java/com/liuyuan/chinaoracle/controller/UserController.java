@@ -46,8 +46,7 @@ public class UserController {
      * @return 统一响应结果
      */
     @PostMapping("/register")
-    public BaseResponse<Long> userRegister(
-        @RequestBody final UserRegisterRequest userRegisterRequest) {
+    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
 
         if (userRegisterRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -70,9 +69,7 @@ public class UserController {
      * @return 统一响应结果
      */
     @PostMapping("/login")
-    public BaseResponse<LoginUserVO> userLogin(
-        @RequestBody final UserLoginRequest userLoginRequest,
-        final HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
 
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -95,7 +92,7 @@ public class UserController {
      */
     @PostMapping("/logout")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Boolean> userLogout(final HttpServletRequest request) {
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -111,8 +108,7 @@ public class UserController {
      */
     @GetMapping("/get/login")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<LoginUserVO> getLoginUser(
-        final HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
 
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
@@ -132,10 +128,7 @@ public class UserController {
      */
     @PostMapping("/update/my")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Boolean> updateMyUser(
-        @RequestBody final UserUpdateMineRequest userUpdateMineRequest,
-        final HttpServletRequest request
-    ) {
+    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMineRequest userUpdateMineRequest, HttpServletRequest request) {
         if (userUpdateMineRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -156,7 +149,7 @@ public class UserController {
      */
     @GetMapping("/get/vo")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<UserVO> getUserVOById(final long id) {
+    public BaseResponse<UserVO> getUserVOById(long id) {
         BaseResponse<User> response = getUserById(id);
         User user = response.getData();
         return ResultUtils.success(userService.getUserVO(user));
@@ -170,8 +163,7 @@ public class UserController {
      */
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Page<UserVO>> listUserVOByPage(
-        @RequestBody final UserQueryRequest userQueryRequest) {
+    public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
 
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -202,8 +194,7 @@ public class UserController {
      */
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> deleteUser(
-        @RequestBody final DeleteRequest deleteRequest) {
+    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
 
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -220,8 +211,7 @@ public class UserController {
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateUser(
-        @RequestBody final UserUpdateRequest userUpdateRequest) {
+    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
 
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -241,7 +231,7 @@ public class UserController {
      */
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<User> getUserById(final long id) {
+    public BaseResponse<User> getUserById(long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -258,8 +248,7 @@ public class UserController {
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<User>> listUserByPage(
-        @RequestBody final UserQueryRequest userQueryRequest) {
+    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest) {
 
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();

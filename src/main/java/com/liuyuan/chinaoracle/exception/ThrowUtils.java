@@ -16,8 +16,8 @@ public final class ThrowUtils {
      * @param condition        是否抛出异常
      * @param runtimeException 运行时异常
      */
-    public static void throwIf(final boolean condition,
-                               final RuntimeException runtimeException) {
+    public static void throwIf(boolean condition,
+                               RuntimeException runtimeException) {
         if (condition) {
             throw runtimeException;
         }
@@ -29,8 +29,8 @@ public final class ThrowUtils {
      * @param condition 是否抛出异常
      * @param errorCode 自定义错误码
      */
-    public static void throwIf(final boolean condition,
-                               final ErrorCode errorCode) {
+    public static void throwIf(boolean condition,
+                               ErrorCode errorCode) {
         throwIf(condition, new BusinessException(errorCode));
     }
 
@@ -41,9 +41,9 @@ public final class ThrowUtils {
      * @param errorCode 自定义错误码
      * @param message   信息
      */
-    public static void throwIf(final boolean condition,
-                               final ErrorCode errorCode,
-                               final String message) {
+    public static void throwIf(boolean condition,
+                               ErrorCode errorCode,
+                               String message) {
         throwIf(condition, new BusinessException(errorCode, message));
     }
 }

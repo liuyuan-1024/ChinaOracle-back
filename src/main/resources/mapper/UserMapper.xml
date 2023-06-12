@@ -20,7 +20,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,email,password,
+        id
+        ,email,password,
         nick_name,avatar,profile,
         role,is_ban,created_at,
         updated_at,is_deleted

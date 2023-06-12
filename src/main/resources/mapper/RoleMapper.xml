@@ -15,7 +15,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,description,
+        id
+        ,name,description,
         status,created_at,updated_at
     </sql>
     <select id="selectOneByName" resultMap="BaseResultMap">

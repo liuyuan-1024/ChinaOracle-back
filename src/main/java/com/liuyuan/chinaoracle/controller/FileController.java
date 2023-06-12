@@ -54,9 +54,9 @@ public class FileController {
      */
     @PostMapping("/upload")
     public BaseResponse<String> uploadFile(
-        @RequestPart("file") final MultipartFile multipartFile,
-        final UploadFileRequest uploadFileRequest,
-        final HttpServletRequest request) {
+        @RequestPart("file") MultipartFile multipartFile,
+        UploadFileRequest uploadFileRequest,
+        HttpServletRequest request) {
 
         String biz = uploadFileRequest.getBiz();
         FileUploadBizEnum fileUploadBizEnum =
@@ -103,8 +103,8 @@ public class FileController {
      * @param multipartFile     文件
      * @param fileUploadBizEnum 业务类型
      */
-    private void verifyFile(final MultipartFile multipartFile,
-                            final FileUploadBizEnum fileUploadBizEnum) {
+    private void verifyFile(MultipartFile multipartFile,
+                            FileUploadBizEnum fileUploadBizEnum) {
         // 文件大小 单位:字节 8bit = 1Byte 1024Byte=1KB
         long fileSize = multipartFile.getSize();
         // 文件后缀

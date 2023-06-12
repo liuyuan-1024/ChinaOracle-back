@@ -15,7 +15,7 @@ public final class SqlUtils {
      * @param sortField 排序字段
      * @return true=合法 false=非法
      */
-    public static boolean verifySortField(final String sortField) {
+    public static boolean verifySortField(String sortField) {
         if (StringUtils.isBlank(sortField)) {
             return false;
         }

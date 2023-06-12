@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * Spring 上下文获取工具.
  */
 @Component
-public class SpringContextUtils implements ApplicationContextAware {
+public final class SpringContextUtils implements ApplicationContextAware {
 
     /**
      * 应用上下文对象.
@@ -24,7 +24,7 @@ public class SpringContextUtils implements ApplicationContextAware {
      * @param beanName bean的名称
      * @return bean
      */
-    public static Object getBean(final String beanName) {
+    public static Object getBean(String beanName) {
         return applicationContext.getBean(beanName);
     }
 
@@ -35,7 +35,7 @@ public class SpringContextUtils implements ApplicationContextAware {
      * @param <T>       泛型
      * @return bean
      */
-    public static <T> T getBean(final Class<T> beanClass) {
+    public static <T> T getBean(Class<T> beanClass) {
         return applicationContext.getBean(beanClass);
     }
 
@@ -47,22 +47,21 @@ public class SpringContextUtils implements ApplicationContextAware {
      * @param <T>       泛型
      * @return bean
      */
-    public static <T> T getBean(final String beanName,
-                                final Class<T> beanClass) {
+    public static <T> T getBean(String beanName,
+                                Class<T> beanClass) {
         return applicationContext.getBean(beanName, beanClass);
     }
 
     /**
      * 设置应用上下文.
      *
-     * @param applicationContext the ApplicationContext object to be used by
-     *                           this object
+     * @param context the ApplicationContext object to be used by
+     *                this object
      * @throws BeansException bean异常
      */
     @Override
-    public void setApplicationContext(
-        @NotNull final ApplicationContext applicationContext)
+    public void setApplicationContext(@NotNull ApplicationContext context)
         throws BeansException {
-        SpringContextUtils.applicationContext = applicationContext;
+        SpringContextUtils.applicationContext = context;
     }
 }

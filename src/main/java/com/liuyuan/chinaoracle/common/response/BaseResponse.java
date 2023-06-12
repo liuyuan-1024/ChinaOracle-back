@@ -34,7 +34,7 @@ public class BaseResponse<T> implements Serializable {
      * @param data    数据
      * @param message 信息
      */
-    public BaseResponse(final int code, final T data, final String message) {
+    public BaseResponse(int code, T data, String message) {
         this.code = code;
         this.data = data;
         this.message = message;
@@ -46,7 +46,7 @@ public class BaseResponse<T> implements Serializable {
      * @param code 状态码
      * @param data 数据
      */
-    public BaseResponse(final int code, final T data) {
+    public BaseResponse(int code, T data) {
         this(code, data, "");
     }
 
@@ -55,7 +55,7 @@ public class BaseResponse<T> implements Serializable {
      *
      * @param errorCode 错误码
      */
-    public BaseResponse(final ErrorCode errorCode) {
+    public BaseResponse(ErrorCode errorCode) {
         this(errorCode.getCode(), null, errorCode.getMessage());
     }
 }

@@ -16,7 +16,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
      * @param registry 协助注册基于URL模式的全局CorsConfiguration映射的实体对象
      */
     @Override
-    public void addCorsMappings(final CorsRegistry registry) {
+    public void addCorsMappings(CorsRegistry registry) {
         // 覆盖所有请求
         registry.addMapping("/**")
             // 允许发送 Cookie

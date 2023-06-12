@@ -31,7 +31,7 @@ public enum RoleEnum {
      */
     private final Integer value;
 
-    RoleEnum(final String role, final int value) {
+    RoleEnum(String role, int value) {
         this.role = role;
         this.value = value;
     }
@@ -42,7 +42,7 @@ public enum RoleEnum {
      * @param role 具体权限
      * @return 对应的用户角色枚举类对象
      */
-    public static RoleEnum getEnumByRole(final String role) {
+    public static RoleEnum getEnumByRole(String role) {
         if (ObjectUtils.isEmpty(role)) {
             return null;
         }
@@ -61,8 +61,7 @@ public enum RoleEnum {
      * @param mustRoleEnum 必需权限
      * @return true or false
      */
-    public static boolean isPriority(final RoleEnum roleEnum,
-                                     final RoleEnum mustRoleEnum) {
+    public static boolean isPriority(RoleEnum roleEnum, RoleEnum mustRoleEnum) {
         return roleEnum.getValue() - mustRoleEnum.getValue() <= 0;
     }
 

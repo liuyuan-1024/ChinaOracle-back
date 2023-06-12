@@ -42,8 +42,7 @@ public enum FileUploadBizEnum {
      */
     private final long maxSize;
 
-    FileUploadBizEnum(final String text, final String value,
-                      final long maxSize) {
+    FileUploadBizEnum(String text, String value, long maxSize) {
         this.text = text;
         this.value = value;
         this.maxSize = maxSize;
@@ -65,7 +64,7 @@ public enum FileUploadBizEnum {
      * @param value 枚举value
      * @return 文件上传枚举
      */
-    public static FileUploadBizEnum getEnumByValue(final String value) {
+    public static FileUploadBizEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;
         }
@@ -83,8 +82,8 @@ public enum FileUploadBizEnum {
      * @param file              文件
      * @param fileUploadBizEnum 文件上传枚举
      */
-    public void verifyFile(final MultipartFile file,
-                           final FileUploadBizEnum fileUploadBizEnum) {
+    public void verifyFile(MultipartFile file,
+                           FileUploadBizEnum fileUploadBizEnum) {
         // 1.校验文件大小
         if (file.getSize() > fileUploadBizEnum.maxSize) {
             long max = fileUploadBizEnum.maxSize / 2 ^ 20;
@@ -110,7 +109,7 @@ public enum FileUploadBizEnum {
      *
      * @param avatar 头像文件
      */
-    private void verifyAvatar(final MultipartFile avatar) {
+    private void verifyAvatar(MultipartFile avatar) {
 
         String suffix = FileUtil.getSuffix(avatar.getOriginalFilename());
 

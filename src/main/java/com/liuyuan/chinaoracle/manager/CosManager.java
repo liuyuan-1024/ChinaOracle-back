@@ -32,8 +32,8 @@ public class CosManager {
      * @param localFilePath 本地文件路径
      * @return PutObjectResult对象
      */
-    public PutObjectResult putObject(final String key,
-                                     final String localFilePath) {
+    public PutObjectResult putObject(String key,
+                                     String localFilePath) {
         PutObjectRequest putObjectRequest =
             new PutObjectRequest(cosClientConfig.getBucket(), key,
                 new File(localFilePath));
@@ -47,7 +47,7 @@ public class CosManager {
      * @param file 文件
      * @return PutObjectResult对象
      */
-    public PutObjectResult putObject(final String key, final File file) {
+    public PutObjectResult putObject(String key, File file) {
         PutObjectRequest putObjectRequest =
             new PutObjectRequest(cosClientConfig.getBucket(), key,
                 file);

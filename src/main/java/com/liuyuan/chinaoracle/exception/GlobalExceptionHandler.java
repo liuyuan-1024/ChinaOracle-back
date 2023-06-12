@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
      * @return 统一响应结果
      */
     @ExceptionHandler(BusinessException.class)
-    public BaseResponse<?> businessExceptionHandler(final BusinessException e) {
+    public BaseResponse<?> businessExceptionHandler(BusinessException e) {
         log.error("BusinessException", e);
         return ResultUtils.error(e.getCode(), e.getMessage());
     }
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
      * @return 统一响应结果
      */
     @ExceptionHandler(RuntimeException.class)
-    public BaseResponse<?> runtimeExceptionHandler(final RuntimeException e) {
+    public BaseResponse<?> runtimeExceptionHandler(RuntimeException e) {
         log.error("RuntimeException", e);
         return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
     }

@@ -19,7 +19,7 @@ public final class NetUtils {
      * @param request 网络请求
      * @return 响应字符串
      */
-    public static String getIpAddress(final ServerHttpRequest request) {
+    public static String getIpAddress(ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
 
         String ip = headers.getFirst("x-forwarded-for");

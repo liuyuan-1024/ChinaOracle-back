@@ -60,8 +60,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private UserMapper userMapper;
 
     @Override
-    public long userRegister(final String email, final String password,
-                             final String checkPassword) {
+    public long userRegister(String email, String password,
+                             String checkPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(email, password, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -105,8 +105,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public LoginUserVO userLogin(final String email, final String password,
-                                 final HttpServletRequest request) {
+    public LoginUserVO userLogin(String email, String password,
+                                 HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(email, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -139,7 +139,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public boolean userLogout(final HttpServletRequest request) {
+    public boolean userLogout(HttpServletRequest request) {
         // 查看用户登录态，判断用户是否已登录
         if (request.getSession().getAttribute(USER_LOGIN_STATE) == null) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
@@ -150,7 +150,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User getLoginUser(final HttpServletRequest request) {
+    public User getLoginUser(HttpServletRequest request) {
         // 先判断是否已登录
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
@@ -168,7 +168,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
     @Override
-    public User getLoginUserPermitNull(final HttpServletRequest request) {
+    public User getLoginUserPermitNull(HttpServletRequest request) {
         // 先判断是否已登录
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
@@ -181,44 +181,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
     @Override
-    public Role getUserRole(final Long userId) {
+    public Role getUserRole(Long userId) {
         User user = userMapper.selectById(userId);
         return roleMapper.selectById(user.getRole());
     }
 
 
     @Override
-    public boolean isSuperAdmin(final Long userId) {
+    public boolean isSuperAdmin(Long userId) {
         Role role = this.getUserRole(userId);
         return RoleEnum.SUPER_ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isAdmin(final Long userId) {
+    public boolean isAdmin(Long userId) {
         Role role = this.getUserRole(userId);
         return RoleEnum.ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isBan(final Long userId) {
+    public boolean isBan(Long userId) {
         User user = userMapper.selectById(userId);
         return UserConstant.BAN.equals(user.getIsBan());
     }
 
     @Override
-    public LoginUserVO getLoginUserVO(final User user) {
+    public LoginUserVO getLoginUserVO(User user) {
         return ObjectUtils.isEmpty(user) ? null
             : UserConvert.INSTANCE.toLoginUserVo(user);
     }
 
     @Override
-    public UserVO getUserVO(final User user) {
+    public UserVO getUserVO(User user) {
         return ObjectUtils.isEmpty(user) ? null
             : UserConvert.INSTANCE.toUserVo(user);
     }
 
     @Override
-    public List<UserVO> getUserVO(final List<User> userList) {
+    public List<UserVO> getUserVO(List<User> userList) {
         if (CollectionUtils.isEmpty(userList)) {
             return new ArrayList<>();
         }
@@ -226,8 +226,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public QueryWrapper<User> getQueryWrapper(final UserQueryRequest
-                                                  userQueryRequest) {
+    public QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest) {
 
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");

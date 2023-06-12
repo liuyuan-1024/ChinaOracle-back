@@ -45,8 +45,8 @@ public class AuthInterceptor {
      * @return 连接点执行后的返回结果
      */
     @Around("@annotation(auth)")
-    public Object doInterceptor(final ProceedingJoinPoint joinPoint,
-                                final AuthCheck auth) throws Throwable {
+    public Object doInterceptor(ProceedingJoinPoint joinPoint,
+                                AuthCheck auth) throws Throwable {
 
         // 必需权限为空时，无需校验用户权限，直接放行
         if (ObjectUtils.isEmpty(auth)) {
