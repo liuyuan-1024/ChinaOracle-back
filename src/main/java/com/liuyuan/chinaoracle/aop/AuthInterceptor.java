@@ -70,7 +70,7 @@ public class AuthInterceptor {
         User loginUser = userService.getLoginUser(request);
 
         // 用户被封号，直接拒绝
-        if (userService.isBan(loginUser.getId())) {
+        if (userService.verifyBan(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
 

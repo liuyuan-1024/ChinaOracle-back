@@ -77,7 +77,7 @@ public interface UserService extends IService<User> {
      * @param userId 用户ID
      * @return true=是 false=不是
      */
-    boolean isSuperAdmin(Long userId);
+    boolean verifySuperAdmin(Long userId);
 
 
     /**
@@ -86,7 +86,7 @@ public interface UserService extends IService<User> {
      * @param userId 用户ID
      * @return true=是 false=不是
      */
-    boolean isAdmin(Long userId);
+    boolean verifyAdmin(Long userId);
 
 
     /**
@@ -95,7 +95,7 @@ public interface UserService extends IService<User> {
      * @param userId 用户ID
      * @return true=被封禁 false=为封禁
      */
-    boolean isBan(Long userId);
+    boolean verifyBan(Long userId);
 
     /**
      * 获取脱敏的已登录用户信息.

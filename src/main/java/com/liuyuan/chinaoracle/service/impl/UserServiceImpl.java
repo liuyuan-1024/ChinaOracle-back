@@ -130,7 +130,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 用户被封禁
-        if (this.isBan(user.getId())) {
+        if (this.verifyBan(user.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         // 3. 记录用户的登录态
@@ -188,19 +188,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
     @Override
-    public boolean isSuperAdmin(Long userId) {
+    public boolean verifySuperAdmin(Long userId) {
         Role role = this.getUserRole(userId);
         return RoleEnum.SUPER_ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isAdmin(Long userId) {
+    public boolean verifyAdmin(Long userId) {
         Role role = this.getUserRole(userId);
         return RoleEnum.ADMIN.getRole().equals(role.getName());
     }
 
     @Override
-    public boolean isBan(Long userId) {
+    public boolean verifyBan(Long userId) {
         User user = userMapper.selectById(userId);
         return UserConstant.BAN.equals(user.getIsBan());
     }
