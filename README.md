@@ -11,7 +11,6 @@
 - Spring AOP 切面编程
 - Spring Scheduler 定时任务
 - Spring 事务注解
-- JGit Git版本管理库(Java编写)
 
 ### 数据存储
 
